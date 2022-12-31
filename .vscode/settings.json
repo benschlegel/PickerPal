@@ -1,0 +1,16 @@
+{
+  "files.exclude": {
+    "**/*.spec.ts": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.checkstyle": true
+  },
+  "eslint.format.enable": true,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "eslint.workingDirectories": ["./src/"],
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+
+}
