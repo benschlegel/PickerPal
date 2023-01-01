@@ -5,7 +5,7 @@ const command : SlashCommand = {
 	command: new SlashCommandBuilder()
 		.setName('ping')
 		.setDescription('Shows the bot\'s ping'),
-	execute: interaction => {
+	async execute(interaction) {
 		interaction.reply({
 			embeds: [
 				new EmbedBuilder()
@@ -15,7 +15,7 @@ const command : SlashCommand = {
 			],
 		});
 	},
-	cooldown: 2,
 };
+
 
 export default command;
