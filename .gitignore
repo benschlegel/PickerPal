@@ -130,3 +130,6 @@ dist
 .pnp.*
 
 config.json
+startServer.ps1
+docker-compose.yml
+

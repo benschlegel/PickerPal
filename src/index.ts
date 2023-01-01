@@ -1,9 +1,10 @@
 // Require the necessary discord.js classes
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
-import { token } from '../config.json';
 import { SlashCommand } from './types';
 import { readdirSync } from 'fs';
 import { join } from 'path';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const process = require('process');
 
 
 // Create a new client instance
@@ -44,4 +45,4 @@ client.on('interactionCreate', async interaction => {
 
 
 // Log in to Discord with your client's token
-client.login(token);
+client.login(process.env['TOKEN']);

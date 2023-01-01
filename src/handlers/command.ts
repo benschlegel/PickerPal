@@ -4,7 +4,7 @@ import { REST } from '@discordjs/rest';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 import { SlashCommand } from '../types';
-import { token, clientId } from '../../config.json';
+const process = require('process');
 
 module.exports = (client : Client) => {
 	const slashCommands : SlashCommandBuilder[] = [];
@@ -18,7 +18,7 @@ module.exports = (client : Client) => {
 		client.slashCommands.set(command.command.name, command);
 	});
 
-	const rest = new REST({ version: '10' }).setToken(token);
+	const rest = new REST({ version: '10' }).setToken(process.env['TOKEN']);
 
 	// deploy commands
 	(async () => {
@@ -27,7 +27,7 @@ module.exports = (client : Client) => {
 
 			// The put method is used to fully refresh all commands in the guild with the current set
 			const data: any = await rest.put(
-				Routes.applicationCommands(clientId),
+				Routes.applicationCommands(process.env['CLIENT_ID']),
 				{ body: slashCommands.map(command => command.toJSON()) },
 			);
 
