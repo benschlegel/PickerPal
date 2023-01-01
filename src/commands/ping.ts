@@ -1,4 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { backgroundColor } from '../constants';
 import { SlashCommand } from '../types';
 
 const command : SlashCommand = {
@@ -9,9 +10,9 @@ const command : SlashCommand = {
 		interaction.reply({
 			embeds: [
 				new EmbedBuilder()
-					.setAuthor({ name: 'MRC License' })
+					.setAuthor({ name: 'Bot ping' })
 					.setDescription(`🏓 Pong! \n 📡 Ping: ${interaction.client.ws.ping}`)
-					.setColor('Aqua'),
+					.setColor(backgroundColor),
 			],
 		});
 	},
