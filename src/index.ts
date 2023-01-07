@@ -1,8 +1,10 @@
 // Require the necessary discord.js classes
-import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
-import { SlashCommand } from './types';
+import { ActionRowBuilder, Client, Collection, Events, GatewayIntentBits, InteractionType, ModalActionRowComponentBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ButtonCustomID, ModalCustomID, SlashCommand } from './types';
 import { readdirSync } from 'fs';
 import { join } from 'path';
+import { OriginalPollEmbed } from './components/embeds';
+import { row } from './components/buttons';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
 
@@ -27,7 +29,46 @@ readdirSync(handlersDir).forEach(handler => {
 });
 
 client.on('interactionCreate', async interaction => {
+	if (interaction.isButton()) {
+		if (interaction.customId === 'add-text-choice' as ButtonCustomID) {
+			const modal = new ModalBuilder()
+				.setCustomId('text-option-modal' as ModalCustomID)
+				.setTitle('Verify yourself')
+				.addComponents([
+					new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+						new TextInputBuilder()
+							.setCustomId('verification-input')
+							.setLabel('Answer')
+							.setStyle(TextInputStyle.Short)
+							.setMinLength(4)
+							.setMaxLength(12)
+							.setPlaceholder('ABCDEF')
+							.setValue('')
+							.setRequired(true),
+					),
+				]);
 
+			await interaction.showModal(modal);
+		}
+	}
+
+	if (interaction.type === InteractionType.ModalSubmit) {
+		if (interaction.customId === 'text-option-modal' as ModalCustomID) {
+			const response =
+        interaction.fields.getTextInputValue('verification-input');
+			interaction.message?.edit({
+				embeds: [
+					OriginalPollEmbed
+						.setTimestamp(new Date())
+						.setDescription(':one:' + '    ' + response),
+				],
+				components: [row as any],
+			});
+
+			// Modal doesnt close unless defer update gets called
+			interaction.deferUpdate();
+		}
+	}
 	if (!interaction.isCommand()) return;
 
 	const command = client.slashCommands.get(interaction.commandName);

@@ -45,3 +45,7 @@ declare module 'discord.js' {
         cooldowns: Collection<string, number>
     }
 }
+
+export type ButtonCustomID = 'add-text-choice' ;
+
+export type ModalCustomID = 'text-option-modal'
