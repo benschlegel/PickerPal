@@ -129,7 +129,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# config/token files
 config.json
 startServer.ps1
+startServer.sh
 docker-compose.yml
 

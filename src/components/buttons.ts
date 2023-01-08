@@ -11,13 +11,13 @@ export const choiceRow1 = new ActionRowBuilder()
 	.addComponents(
 		new ButtonBuilder()
 			.setCustomId(addChoiceID)
-			.setLabel('Add choice')
+			.setLabel('✏️ Add choice')
 			.setStyle(ButtonStyle.Primary),
 	)
 	.addComponents(
 		new ButtonBuilder()
 			.setCustomId(yesNoChoiceID)
-			.setLabel('Convert to yes/no choice')
+			.setLabel('✏️ Convert to yes/no choice')
 			.setStyle(ButtonStyle.Secondary),
 	);
 
@@ -26,6 +26,6 @@ export const choiceRow2 = new ActionRowBuilder()
 	.addComponents(
 		new ButtonBuilder()
 			.setCustomId(startChoiceID)
-			.setLabel('Make choice')
+			.setLabel('✅ Make choice')
 			.setStyle(ButtonStyle.Success),
 	);

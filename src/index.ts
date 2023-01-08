@@ -69,7 +69,8 @@ client.on('interactionCreate', async interaction => {
 			interaction.message?.edit({
 				embeds: [
 					OriginalPollEmbed
-						.setDescription(':one:' + '    ' + response),
+						.setDescription('.')
+						.addFields({ name: 'Choice', value: ':one:' + '    ' + response }),
 				],
 			});
 

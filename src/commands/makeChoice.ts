@@ -61,7 +61,11 @@ const command : SlashCommand = {
 		interaction.reply({
 			embeds: [
 				OriginalPollEmbed
-					.setTitle('📊 ' + (interaction.options.get(optionName)?.value as string ?? 'no name provided')) // realistically doesnt need default value but just in case
+					.addFields(
+						{ name: '📊 Prompt', value: (interaction.options.get(optionName)?.value as string ?? 'no name provided') },
+						{ name: '\u200B', value: '\u200B' },
+						{ name: 'Choices', value: '⚡ *(add options to get started)*' })
+					// .setTitle('📊 ' + (interaction.options.get(optionName)?.value as string ?? 'no name provided')) // realistically doesnt need default value but just in case
 					.setTimestamp(new Date()),
 			],
 			components: [choiceRow1, choiceRow2],
