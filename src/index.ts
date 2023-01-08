@@ -4,7 +4,6 @@ import { ButtonCustomID, ModalCustomID, SlashCommand } from './types';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 import { OriginalPollEmbed } from './components/embeds';
-import { row } from './components/buttons';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
 
@@ -50,19 +49,28 @@ client.on('interactionCreate', async interaction => {
 
 			await interaction.showModal(modal);
 		}
+		else if (interaction.customId === 'yes-no-choice' as ButtonCustomID) {
+			interaction.message?.edit({
+				embeds: [
+					OriginalPollEmbed
+						.setDescription('\u200B:one: yes\n\n:two: no'),
+				],
+			});
+			interaction.deferUpdate();
+		}
 	}
 
 	if (interaction.type === InteractionType.ModalSubmit) {
 		if (interaction.customId === 'text-option-modal' as ModalCustomID) {
 			const response =
         interaction.fields.getTextInputValue('verification-input');
+			const oldDescription = interaction.message?.embeds[0].description;
+			console.log(oldDescription);
 			interaction.message?.edit({
 				embeds: [
 					OriginalPollEmbed
-						.setTimestamp(new Date())
 						.setDescription(':one:' + '    ' + response),
 				],
-				components: [row as any],
 			});
 
 			// Modal doesnt close unless defer update gets called

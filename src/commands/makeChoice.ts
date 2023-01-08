@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, ModalActionRowComponentBuilder } from 'discord.js';
-import { row } from '../components/buttons';
+import { choiceRow1, choiceRow2 } from '../components/buttons';
 import { OriginalPollEmbed } from '../components/embeds';
 import { SlashCommand } from '../types';
 
@@ -64,7 +64,7 @@ const command : SlashCommand = {
 					.setTitle('📊 ' + (interaction.options.get(optionName)?.value as string ?? 'no name provided')) // realistically doesnt need default value but just in case
 					.setTimestamp(new Date()),
 			],
-			components: [row],
+			components: [choiceRow1, choiceRow2],
 		});
 	},
 };
