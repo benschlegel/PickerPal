@@ -32,6 +32,25 @@ export async function addChoice(choice: Choice) {
 	);
 }
 
+export async function setChoice(id: string, choice: CreateChoice) {
+	const database = dbClient.db(dbName);
+	const choiceCollection = database.collection<CreateChoice>(collectionName);
+	await choiceCollection.findOneAndReplace(
+		{ _id: choice._id },
+		choice,
+	);
+}
+
+// Expects all choices to have the same
+export async function clearChoices(id: string) {
+	const database = dbClient.db(dbName);
+	const choiceCollection = database.collection<CreateChoice>(collectionName);
+	await choiceCollection.updateMany(
+		{ _id: id },
+		{ $set: { choices: [] } },
+	);
+}
+
 export async function getChoices(id: string): Promise<string[] | undefined> {
 	const database = dbClient.db(dbName);
 	const choiceCollection = database.collection<CreateChoice>(collectionName);
@@ -45,3 +64,7 @@ export async function getFullChoice(id: string) {
 	const choice = await choiceCollection.findOne({ _id: id });
 	return choice;
 }
+
+// export async function editField(id: string, field: keyof CreateChoice, value: any) {
+// 	console.log('field: ' + field + ', vaslue: ' + value);
+// }

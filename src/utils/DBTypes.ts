@@ -3,6 +3,7 @@ export interface CreateChoice {
   _id: string;
   choiceTitle: string;
   isComplete?: boolean;
+  finalChoice?: string;
   choices?: string[];
 }
 
