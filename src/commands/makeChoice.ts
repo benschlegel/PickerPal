@@ -58,6 +58,7 @@ const command : SlashCommand = {
 	async execute(interaction: any) {
 		// Show the modal to the user
 		// interaction.showModal(modal);
+		console.log(interaction);
 		interaction.reply({
 			embeds: [
 				OriginalPollEmbed

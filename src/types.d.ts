@@ -23,7 +23,7 @@ export type GuildOption = keyof GuildOptions
 export interface BotEvent {
     name: string,
     once?: boolean | false,
-    execute: (...args?) => void
+    execute: (...args: any) => void
 }
 
 declare global {

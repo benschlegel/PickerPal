@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { backgroundColor } from '../constants';
+import { backgroundColor } from '../utils/constants';
 import { SlashCommand } from '../types';
 
 const command : SlashCommand = {
