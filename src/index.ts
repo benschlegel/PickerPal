@@ -43,8 +43,8 @@ client.on('interactionCreate', async interaction => {
 							.setCustomId('verification-input')
 							.setLabel('Answer')
 							.setStyle(TextInputStyle.Short)
-							.setMinLength(4)
-							.setPlaceholder('ABCDEF')
+							.setMinLength(1)
+							.setPlaceholder('New choice...')
 							.setValue('')
 							.setRequired(true),
 					),
@@ -76,25 +76,25 @@ client.on('interactionCreate', async interaction => {
 			const newChoice: Choice = { updateId: messageId, name: response };
 			await addChoice(newChoice);
 			const choices = await getChoices(messageId) as string[];
-			console.log('Selected choices: ', choices);
 			const fullChoice = await getFullChoice(messageId);
 			const choiceTitle = fullChoice?.choiceTitle as string;
 
+			// Fill in static fields
 			const newFields: APIEmbedField[] = [
 				{ name: '\u200B', value: '\u200B' },
 				{ name: '📊 Prompt', value: choiceTitle },
 				{ name: '\u200B', value: '\u200B' },
 			];
 
+			// Add choices
 			for (let i = 0; i < choices.length; i++) {
-				newFields.push({ name: getEmojiFromIndex(i) + ' Choice', value: choices[i], inline: true });
+				newFields.push({ name: getEmojiFromIndex(i) + ' Choice', value: choices[i] });
 			}
-			// console.log(getEmojiFromIndex(11));
 
 			// Get old embed
 			const receivedEmbed = interaction.message?.embeds[0] as APIEmbed | JSONEncodable<APIEmbed>;
 			const choiceEmbed = EmbedBuilder.from(receivedEmbed)
-				.setDescription('*⚡ click "Make choice" to start decision*')
+				.setDescription('*⚡ click "Make choice" button to start decision*')
 				.setFields([])
 				.addFields(
 					newFields,
