@@ -38,3 +38,10 @@ export async function getChoices(id: string): Promise<string[] | undefined> {
 	const choice = await choiceCollection.findOne({ _id: id });
 	return choice?.choices;
 }
+
+export async function getFullChoice(id: string) {
+	const database = dbClient.db(dbName);
+	const choiceCollection = database.collection<CreateChoice>(collectionName);
+	const choice = await choiceCollection.findOne({ _id: id });
+	return choice;
+}

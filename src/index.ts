@@ -1,11 +1,11 @@
 // Require the necessary discord.js classes
-import { ActionRowBuilder, Client, Collection, EmbedBuilder, Events, GatewayIntentBits, InteractionType, ModalActionRowComponentBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, APIEmbed, APIEmbedField, Client, Collection, EmbedBuilder, Events, GatewayIntentBits, InteractionType, JSONEncodable, ModalActionRowComponentBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { ButtonCustomID, ModalCustomID, SlashCommand } from './types';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 import { OriginalPollEmbed } from './components/embeds';
 import { Choice } from './utils/DBTypes';
-import { addChoice, getChoices } from './utils/databaseAcces';
+import { addChoice, getChoices, getFullChoice } from './utils/databaseAcces';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -43,7 +43,6 @@ client.on('interactionCreate', async interaction => {
 							.setLabel('Answer')
 							.setStyle(TextInputStyle.Short)
 							.setMinLength(4)
-							.setMaxLength(12)
 							.setPlaceholder('ABCDEF')
 							.setValue('')
 							.setRequired(true),
@@ -63,20 +62,43 @@ client.on('interactionCreate', async interaction => {
 		}
 	}
 
+	// TODO: only let author edit poll
+
+	// Gets executed after modal submit
 	if (interaction.type === InteractionType.ModalSubmit) {
 		if (interaction.customId === 'text-option-modal' as ModalCustomID) {
-			const response =
-        interaction.fields.getTextInputValue('verification-input');
+			// Response from modal input field
+			const response = interaction.fields.getTextInputValue('verification-input');
+
+			// Database access
 			const messageId = interaction.message?.id as string;
 			const newChoice: Choice = { updateId: messageId, name: response };
 			await addChoice(newChoice);
 			const choices = await getChoices(messageId);
 			console.log('Selected choices: ', choices);
+			const fullChoice = await getFullChoice(messageId);
+			const choiceTitle = fullChoice?.choiceTitle as string;
+
+			const newFields: APIEmbedField[] = [
+				{ name: '\u200B', value: '\u200B' },
+				{ name: '📊 Prompt', value: choiceTitle },
+				{ name: '\u200B', value: '\u200B' },
+				{ name: '1️⃣ Choice', value: response },
+			];
+
+			// Get old embed
+			const receivedEmbed = interaction.message?.embeds[0] as APIEmbed | JSONEncodable<APIEmbed>;
+			const choiceEmbed = EmbedBuilder.from(receivedEmbed)
+				.setDescription('*⚡ click "Make choice" to start decision*')
+				.setFields([])
+				.addFields(
+					newFields,
+				);
+
+			// Edit original message
 			interaction.message?.edit({
 				embeds: [
-					OriginalPollEmbed
-						.setDescription(null)
-						.addFields({ name: 'Choice', value: ':one:' + '    ' + response }),
+					choiceEmbed,
 				],
 			});
 
