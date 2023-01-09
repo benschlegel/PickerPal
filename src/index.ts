@@ -4,6 +4,8 @@ import { ButtonCustomID, ModalCustomID, SlashCommand } from './types';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 import { OriginalPollEmbed } from './components/embeds';
+import { Choice } from './utils/DBTypes';
+import { addChoice, getChoices } from './utils/databaseAcces';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -29,9 +31,6 @@ readdirSync(handlersDir).forEach(handler => {
 });
 
 client.on('interactionCreate', async interaction => {
-	console.log(interaction.guildId);
-	console.log(interaction.channelId);
-	console.log(interaction.id);
 	if (interaction.isButton()) {
 		if (interaction.customId === 'add-text-choice' as ButtonCustomID) {
 			const modal = new ModalBuilder()
@@ -68,11 +67,15 @@ client.on('interactionCreate', async interaction => {
 		if (interaction.customId === 'text-option-modal' as ModalCustomID) {
 			const response =
         interaction.fields.getTextInputValue('verification-input');
-			const oldDescription = interaction.message?.embeds[0].description;
+			const messageId = interaction.message?.id as string;
+			const newChoice: Choice = { updateId: messageId, name: response };
+			await addChoice(newChoice);
+			const choices = await getChoices(messageId);
+			console.log('Selected choices: ', choices);
 			interaction.message?.edit({
 				embeds: [
 					OriginalPollEmbed
-						.setDescription('.')
+						.setDescription(null)
 						.addFields({ name: 'Choice', value: ':one:' + '    ' + response }),
 				],
 			});

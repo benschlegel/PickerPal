@@ -1,3 +1,12 @@
+export interface CreateChoice {
+  // message id
+  _id: string;
+  choiceTitle: string;
+  isComplete?: boolean;
+  choices?: string[];
+}
+
 export interface Choice {
-  id: string;
+  updateId: string;
+  name: string;
 }

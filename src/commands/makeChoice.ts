@@ -1,8 +1,9 @@
 import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, ModalActionRowComponentBuilder } from 'discord.js';
+import { CreateChoice } from 'src/utils/DBTypes';
 import { choiceRow1, choiceRow2 } from '../components/buttons';
 import { OriginalPollEmbed } from '../components/embeds';
 import { SlashCommand } from '../types';
-import { addChoice } from '../utils/databaseAcces';
+import { createChoice } from '../utils/databaseAcces';
 
 
 // Name of options
@@ -60,22 +61,23 @@ const command : SlashCommand = {
 	async execute(interaction: any) {
 		// Show the modal to the user
 		// interaction.showModal(modal);
-		await addChoice({ id: 'testing id very cool very swag' });
-		console.log(interaction);
-		interaction.reply({
+		const title = interaction.options.get(optionName)?.value as string;
+		const message = await interaction.reply({
 			embeds: [
 				OriginalPollEmbed
 					.addFields(
-						{ name: '📊 Prompt', value: (interaction.options.get(optionName)?.value as string ?? 'no name provided') },
+						{ name: '📊 Prompt', value: title ?? 'no name provided' },
 						{ name: '\u200B', value: '\u200B' },
 						{ name: 'Choices', value: '⚡ *(add options to get started)*' })
 					// .setTitle('📊 ' + (interaction.options.get(optionName)?.value as string ?? 'no name provided')) // realistically doesnt need default value but just in case
 					.setTimestamp(new Date()),
 			],
 			components: [choiceRow1, choiceRow2],
+			fetchReply: true,
 		});
+		const choice: CreateChoice = { _id: message.id, choiceTitle: title };
+		await createChoice(choice);
 	},
 };
-
 
 export default command;
