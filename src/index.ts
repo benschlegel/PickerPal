@@ -3,34 +3,10 @@ import { ActionRowBuilder, Client, Collection, EmbedBuilder, Events, GatewayInte
 import { ButtonCustomID, ModalCustomID, SlashCommand } from './types';
 import { readdirSync } from 'fs';
 import { join } from 'path';
-import * as Mongo from 'mongodb';
 import { OriginalPollEmbed } from './components/embeds';
-import { backgroundColor } from './utils/constants';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
-
-
-const uri = 'mongodb+srv://Ben:QcXLFudNGH5mm0PU@bencluster.05q0blr.mongodb.net/?retryWrites=true&w=majority';
-const dbName = 'PickerPal';
-// Use connect method to connect to the server
-// export const dbClient = Promise.resolve(Mongo.MongoClient.connect(uri));
-
-// // Initialize db
-// console.log('Connected successfully to server');
-
-// export const db = dbClient.db(dbName);
-
-// // Get the documents collection
-// export const choiceCollection = db.collection('choices');
-
-// // Find some documents
-// choiceCollection.find({}).toArray().then(docs => {
-
-// 	console.log('Found the following records');
-// 	console.log(docs);
-// }).catch(console.error);
-
-// choiceCollection.insertOne({ a: 'test' });
 
 
 // Create a new client instance

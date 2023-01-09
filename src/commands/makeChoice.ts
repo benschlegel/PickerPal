@@ -2,6 +2,8 @@ import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBu
 import { choiceRow1, choiceRow2 } from '../components/buttons';
 import { OriginalPollEmbed } from '../components/embeds';
 import { SlashCommand } from '../types';
+import { addChoice } from '../utils/databaseAcces';
+
 
 // Name of options
 const optionName = 'name';
@@ -58,6 +60,7 @@ const command : SlashCommand = {
 	async execute(interaction: any) {
 		// Show the modal to the user
 		// interaction.showModal(modal);
+		await addChoice({ id: 'testing id very cool very swag' });
 		console.log(interaction);
 		interaction.reply({
 			embeds: [
