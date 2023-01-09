@@ -1,6 +1,8 @@
 import chalk from 'chalk';
 import { GuildMember, PermissionFlagsBits, PermissionResolvable, TextChannel } from 'discord.js';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const emojiCharacters = require('./utils/emojiCharacters');
 
 type colorType = 'text' | 'variable' | 'error'
 
@@ -34,3 +36,28 @@ export const sendTimedMessage = (message: string, channel: TextChannel, duration
 		.then(m => setTimeout(async () => (await channel.messages.fetch(m)).delete(), duration));
 	return;
 };
+
+/**
+ * Converts an index to the corresponding emoji/s (e.g. index: 0 -> 1️⃣, 11 -> 1️⃣2️⃣)
+ * @param index array index or number to be converted to an emoji
+ * @returns the corresponding emoji/s of (index + 1) or
+ */
+export function getEmojiFromIndex(index: number): string {
+	// Return 0 if invalid index
+	if (index < 0) {
+		return emojiCharacters[0];
+	}
+
+	// If index can be displayed using 1 digit, return it
+	if (index < 9) {
+		return emojiCharacters[index + 1];
+	}
+
+	// TODO: fix last digit + 1 to convert index to correct emoji
+	const stringIndex = '' + index;
+	const emojiArray = [];
+	for (let i = 0; i < stringIndex.length; i++) {
+		emojiArray.push(emojiCharacters[stringIndex[i]]);
+	}
+	return emojiArray.join();
+}

@@ -4,8 +4,6 @@ import { choiceRow1, choiceRow2 } from '../components/buttons';
 import { OriginalPollEmbed } from '../components/embeds';
 import { SlashCommand } from '../types';
 import { createChoice } from '../utils/databaseAcces';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const emojiCharacters = require('../utils/emojiCharacters');
 
 
 // Name of options

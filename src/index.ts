@@ -6,6 +6,7 @@ import { join } from 'path';
 import { OriginalPollEmbed } from './components/embeds';
 import { Choice } from './utils/DBTypes';
 import { addChoice, getChoices, getFullChoice } from './utils/databaseAcces';
+import { getEmojiFromIndex } from './functions';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -74,7 +75,7 @@ client.on('interactionCreate', async interaction => {
 			const messageId = interaction.message?.id as string;
 			const newChoice: Choice = { updateId: messageId, name: response };
 			await addChoice(newChoice);
-			const choices = await getChoices(messageId);
+			const choices = await getChoices(messageId) as string[];
 			console.log('Selected choices: ', choices);
 			const fullChoice = await getFullChoice(messageId);
 			const choiceTitle = fullChoice?.choiceTitle as string;
@@ -83,8 +84,12 @@ client.on('interactionCreate', async interaction => {
 				{ name: '\u200B', value: '\u200B' },
 				{ name: '📊 Prompt', value: choiceTitle },
 				{ name: '\u200B', value: '\u200B' },
-				{ name: '1️⃣ Choice', value: response },
 			];
+
+			for (let i = 0; i < choices.length; i++) {
+				newFields.push({ name: getEmojiFromIndex(i) + ' Choice', value: choices[i], inline: true });
+			}
+			// console.log(getEmojiFromIndex(11));
 
 			// Get old embed
 			const receivedEmbed = interaction.message?.embeds[0] as APIEmbed | JSONEncodable<APIEmbed>;
