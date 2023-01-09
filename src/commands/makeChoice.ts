@@ -4,6 +4,8 @@ import { choiceRow1, choiceRow2 } from '../components/buttons';
 import { OriginalPollEmbed } from '../components/embeds';
 import { SlashCommand } from '../types';
 import { createChoice } from '../utils/databaseAcces';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const emojiCharacters = require('../utils/emojiCharacters');
 
 
 // Name of options
@@ -62,15 +64,18 @@ const command : SlashCommand = {
 		// Show the modal to the user
 		// interaction.showModal(modal);
 		const title = interaction.options.get(optionName)?.value as string;
+
+		const choiceEmbed = EmbedBuilder.from(OriginalPollEmbed)
+			.addFields(
+				{ name: '📊 Prompt', value: title ?? 'no name provided' },
+				{ name: '\u200B', value: '\u200B' },
+				{ name:  'Choices', value: '⚡ *(add options to get started)*' })
+			.setTimestamp(new Date())
+		;
+
 		const message = await interaction.reply({
 			embeds: [
-				OriginalPollEmbed
-					.addFields(
-						{ name: '📊 Prompt', value: title ?? 'no name provided' },
-						{ name: '\u200B', value: '\u200B' },
-						{ name: 'Choices', value: '⚡ *(add options to get started)*' })
-					// .setTitle('📊 ' + (interaction.options.get(optionName)?.value as string ?? 'no name provided')) // realistically doesnt need default value but just in case
-					.setTimestamp(new Date()),
+				choiceEmbed,
 			],
 			components: [choiceRow1, choiceRow2],
 			fetchReply: true,
