@@ -45,12 +45,12 @@ client.on('interactionCreate', async interaction => {
 			}
 			const modal = new ModalBuilder()
 				.setCustomId('text-option-modal' as ModalCustomID)
-				.setTitle('Verify yourself')
+				.setTitle('Add new choice...')
 				.addComponents([
 					new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
 						new TextInputBuilder()
 							.setCustomId('verification-input')
-							.setLabel('Answer')
+							.setLabel('Choice:')
 							.setStyle(TextInputStyle.Short)
 							.setMinLength(1)
 							.setPlaceholder('New choice...')
@@ -141,7 +141,6 @@ client.on('interactionCreate', async interaction => {
 
 
 			const winningChoiceIndex = randomIntFromInterval(0, choices.length - 1);
-			console.log('Winning choice: ' + winningChoiceIndex);
 			const finalChoice = choices[winningChoiceIndex];
 
 			// Add fields for decision
@@ -158,12 +157,13 @@ client.on('interactionCreate', async interaction => {
 			interaction.message?.edit({
 				embeds: [
 					choiceEmbed
-						.setDescription('*This choice has been decided.*')
+						.setDescription(':warning: *This choice has been decided.*')
 						.setFields([])
 						.addFields(
 							newFields,
 						),
 				],
+				components: [],
 			});
 			interaction.deferUpdate();
 		}

@@ -46,7 +46,7 @@ const command : SlashCommand = {
 		.addStringOption(option =>
 			option
 				.setName(optionName)
-				.setDescription('Name of the choice.')
+				.setDescription('Name of the choice. (e.g: \'What should i cook?\')')
 				.setRequired(true))
 		.addBooleanOption(option =>
 			option

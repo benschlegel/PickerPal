@@ -19,7 +19,6 @@ export async function createChoice(choice: CreateChoice): Promise<string> {
 	// finds and inserts
 	const choiceCollection = database.collection<CreateChoice>(collectionName);
 	const result = await choiceCollection.insertOne(choice);
-	console.log(`A document was inserted with the _id: ${result.insertedId}`);
 	return result.insertedId;
 }
 
