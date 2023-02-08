@@ -52,7 +52,6 @@ client.on('interactionCreate', async interaction => {
 							.setCustomId('verification-input')
 							.setLabel('Choice:')
 							.setStyle(TextInputStyle.Short)
-							.setMinLength(1)
 							.setPlaceholder('New choice...')
 							.setValue('')
 							.setRequired(true),
