@@ -6,7 +6,7 @@ import { join } from 'path';
 import { OriginalPollEmbed } from './components/embeds';
 import { Choice } from './utils/DBTypes';
 import { addChoice, clearChoices, getChoices, getFullChoice, setChoice } from './utils/databaseAcces';
-import { getEmojiFromIndex, randomIntFromInterval } from './functions';
+import { getEmojiFromIndex, getEmojiFromIndexWithChoice, randomIntFromInterval } from './functions';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -86,9 +86,9 @@ client.on('interactionCreate', async interaction => {
 				{ name: '\u200B', value: '\u200B' },
 			];
 
-			// Add choices
+			// Add choices ✅ ❌
 			for (let i = 0; i < choices.length; i++) {
-				newFields.push({ name: getEmojiFromIndex(i) + ' Choice', value: choices[i] });
+				newFields.push({ name: getEmojiFromIndexWithChoice(i, choices[i]) + ' Choice', value: choices[i] });
 			}
 
 			// Get old embed
@@ -119,6 +119,13 @@ client.on('interactionCreate', async interaction => {
 				await interaction.reply({ content: ':warning: Can\'t make choice without options, add choice to get started.\n:x: Did not complete action.', ephemeral: true });
 				return;
 			}
+
+			// Send error message if there's not enough options
+			if (choices.length < 2) {
+				await interaction.reply({ content: ':warning: Add at least 2 options to make decision.\n:x: Did not complete action.', ephemeral: true });
+				return;
+			}
+
 			// Dont reroll choice if already complete
 			if (fullChoice?.isComplete === true) {
 				await interaction.reply({ content: ':warning: Choice has already been decided, start a new one if you want to reroll.\n:x: Did not complete action.', ephemeral: true });
@@ -135,7 +142,7 @@ client.on('interactionCreate', async interaction => {
 
 			// Add choices
 			for (let i = 0; i < choices.length; i++) {
-				newFields.push({ name: getEmojiFromIndex(i) + ' Choice', value: choices[i] });
+				newFields.push({ name: getEmojiFromIndexWithChoice(i, choices[i]) + ' Choice', value: choices[i] });
 			}
 
 
@@ -144,7 +151,7 @@ client.on('interactionCreate', async interaction => {
 
 			// Add fields for decision
 			newFields.push({ name: '\u200B', value: '\u200B' });
-			newFields.push({ name: '⚡ Final Decision', value: finalChoice });
+			newFields.push({ name: '⚡ Final Decision', value: getEmojiFromIndexWithChoice(winningChoiceIndex, finalChoice) + ' ' + finalChoice });
 
 			// Set database entries
 			fullChoice!.isComplete = true;
@@ -193,7 +200,7 @@ client.on('interactionCreate', async interaction => {
 
 			// Add choices
 			for (let i = 0; i < choices.length; i++) {
-				newFields.push({ name: getEmojiFromIndex(i) + ' Choice', value: choices[i] });
+				newFields.push({ name: getEmojiFromIndexWithChoice(i, choices[i]) + ' Choice', value: choices[i] });
 			}
 
 			// Get old embed

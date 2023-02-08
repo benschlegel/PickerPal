@@ -37,6 +37,7 @@ export const sendTimedMessage = (message: string, channel: TextChannel, duration
 	return;
 };
 
+
 /**
  * Converts an index to the corresponding emoji/s (e.g. index: 0 -> 1️⃣, 11 -> 1️⃣2️⃣)
  * @param index array index or number to be converted to an emoji
@@ -60,6 +61,26 @@ export function getEmojiFromIndex(index: number): string {
 		emojiArray.push(emojiCharacters[stringIndex[i]]);
 	}
 	return emojiArray.join();
+}
+
+/**
+ * Converts an index to the corresponding emoji/s (e.g. index: 0 -> 1️⃣, 11 -> 1️⃣2️⃣)
+ * @param index array index or number to be converted to an emoji
+ * @param choice used to return special emojis instead (like ✅ ❌ for "yes"/"no")
+ * @returns the corresponding emoji/s of (index + 1) or
+ */
+export function getEmojiFromIndexWithChoice(index: number, choice?: string): string {
+	if (choice) {
+		switch (choice.toLowerCase()) {
+		case 'yes': {
+			return '✅';
+		}
+		case 'no': {
+			return '❌';
+		}
+		}
+	}
+	return getEmojiFromIndex(index);
 }
 
 export function randomIntFromInterval(min: number, max: number) { // min and max included
