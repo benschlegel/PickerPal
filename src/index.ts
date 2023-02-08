@@ -175,6 +175,7 @@ client.on('interactionCreate', async interaction => {
 		}
 	}
 
+	// TODO: fix polls in private chat
 	// TODO: only let author edit poll
 	// TODO: add uniform error response handler
 
