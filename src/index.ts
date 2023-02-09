@@ -3,14 +3,15 @@ import { ActionRowBuilder, APIEmbed, APIEmbedField, Client, Collection, EmbedBui
 import { ButtonCustomID, ModalCustomID, SlashCommand } from './types';
 import { readdirSync } from 'fs';
 import { join } from 'path';
-import { OriginalPollEmbed } from './components/embeds';
 import { Choice } from './utils/DBTypes';
-import { addChoice, clearChoices, getChoices, getFullChoice, setChoice } from './utils/databaseAcces';
-import { getEmojiFromIndex, getEmojiFromIndexWithChoice, randomIntFromInterval } from './functions';
+import { addChoice, clearChoices, deleteOldPolls, getChoices, getFullChoice, setChoice } from './utils/databaseAcces';
+import { getEmojiFromIndexWithChoice, randomIntFromInterval } from './functions';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
 
+// Deletes all polls that are finished once per hour
+setInterval(deleteOldPolls, (60 * 60 * 1000));
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });

@@ -22,6 +22,14 @@ export async function createChoice(choice: CreateChoice): Promise<string> {
 	return result.insertedId;
 }
 
+export async function deleteOldPolls() {
+	const database = dbClient.db(dbName);
+	// Specifying a Schema is optional, but it enables type hints on
+	// finds and inserts
+	const choiceCollection = database.collection<CreateChoice>(collectionName);
+	choiceCollection.deleteMany({ isComplete: true });
+}
+
 export async function addChoice(choice: Choice) {
 	const database = dbClient.db(dbName);
 	const choiceCollection = database.collection<CreateChoice>(collectionName);
