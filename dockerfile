@@ -1,9 +1,9 @@
 FROM node:latest AS builder
 WORKDIR /app
 COPY . .
-RUN yarn install --frozen-lockfile
+RUN npm install
 
-RUN yarn build
+RUN npm run build
 
 FROM alpine
 RUN apk add --update nodejs

@@ -5,14 +5,18 @@ import { readdirSync } from 'fs';
 import { join } from 'path';
 import { Choice } from './utils/DBTypes';
 import { addChoice, clearChoices, deleteOldPolls, getChoices, getFullChoice, setChoice } from './utils/databaseAcces';
-import { getEmojiFromIndexWithChoice, randomIntFromInterval } from './functions';
+import { getEmojiFromIndexWithChoice, randomIntFromInterval, stringify } from './functions';
 import { commandHandler } from './handlers/command';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
 
+// Intervals
+let checkAliveInterval = 30 * 1000;
+const deleteInterval = (60 * 60 * 1000);
 // Deletes all polls that are finished once per hour
-setInterval(deleteOldPolls, (60 * 60 * 1000));
+setInterval(deleteOldPolls, deleteInterval);
+setInterval(checkAliveAndRestart, checkAliveInterval);
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });
@@ -241,3 +245,53 @@ client.on('interactionCreate', async interaction => {
 
 // Log in to Discord with your client's token
 client.login(process.env['TOKEN']);
+
+
+// Maybe move this to /intervalFunctions, see if exporting client works (+ find way to change checkAliveInterval)
+function checkAliveAndRestart() {
+	console.log('level=trace msg="last alive at" data="' + client.readyAt?.toLocaleString() + '"');
+
+	const shard0 = client.ws.shards.get(0);
+	if (shard0) {
+		const lastPingDate = new Date(shard0.lastPingTimestamp);
+		console.log('level=trace msg="last ping date" data="' + lastPingDate.toLocaleString() + '"');
+	}
+	else {
+		console.log('level=error msg="could not get shard 0.');
+
+		client.destroy();
+		console.log('level=info msg="destroyed client (shard0)."');
+		// Attempt to restart client
+		client.login(process.env['TOKEN']).catch((err) => {
+			console.log('level=error msg="failed to reconnect!" error="' + stringify(err) + '"');
+		}).then(() => {
+			console.log('level=info msg="successfully reconnected! (shard0)"');
+		});
+	}
+	// fetching a random guild to see if the bot is still connected, if this results in an error => bot is dead 🕯️
+	client.fetchGuildPreview('1058787785030500492').catch((error) => {
+		// Set interval to keep checking every 5 seconds
+		checkAliveInterval = 5000;
+
+		// Logging
+		console.log('level=error msg="bot disconnected!" error="' + stringify(error) + '"');
+
+		// client.destroy();
+		// console.log('level=info msg="destroyed client."');
+		// console.log('level=info msg="attempting to reconnect..."');
+		console.log('level=info msg="stopping process..."');
+		process.exit(1);
+		// Attempt new login, log depending on success
+		// client.login(process.env['TOKEN']).catch((err) => {
+		// 	console.log('level=error msg="failed to reconnect!" error="' + stringify(err) + '"');
+		// }).then(() => {
+		// 	console.log('level=info msg="successfully reconnected!"');
+		// });
+	}).then(() => {
+		// Logging
+		console.log('level=debug msg="still alive!" localTime="' + new Date().toLocaleString() + '"');
+		// If bot is alive, reset check time back to 30 seconds
+		checkAliveInterval = 30 * 1000;
+	});
+}
+
