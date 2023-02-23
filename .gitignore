@@ -132,6 +132,14 @@ dist
 # config/token files
 config.json
 startServer.ps1
+startServerDev.ps1
 startServer.sh
+startTest.ps1
 docker-compose.yml
 
+# scripts
+src/scripts/
+pushDocker.ps1
+
+# build dir
+build/

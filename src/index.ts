@@ -6,6 +6,7 @@ import { join } from 'path';
 import { Choice } from './utils/DBTypes';
 import { addChoice, clearChoices, deleteOldPolls, getChoices, getFullChoice, setChoice } from './utils/databaseAcces';
 import { getEmojiFromIndexWithChoice, randomIntFromInterval } from './functions';
+import { commandHandler } from './handlers/command';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -19,18 +20,15 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 // When the client is ready, run this code (only once)
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, c => {
-	console.log(`Ready! Logged in as ${c.user.tag}`);
+	console.log(`level=info msg="Ready! Logged in as ${c.user.tag}"`);
+	client.user?.setActivity('/make-choice');
 });
 
 // load commands
 client.slashCommands = new Collection<string, SlashCommand>();
 
 // load handlers
-const handlersDir = join(__dirname, './handlers');
-readdirSync(handlersDir).forEach(handler => {
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
-	require(`${handlersDir}/${handler}`)(client);
-});
+commandHandler(client);
 
 client.on('interactionCreate', async interaction => {
 	if (interaction.isButton()) {

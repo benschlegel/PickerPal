@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import { GuildMember, PermissionFlagsBits, PermissionResolvable, TextChannel } from 'discord.js';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -13,11 +12,6 @@ const themeColors = {
 };
 
 export const getThemeColor = (color: colorType) => Number(`0x${themeColors[color].substring(1)}`);
-
-// eslint-disable-next-line no-shadow
-export const color = (color: colorType, message: any) => {
-	return chalk.hex(themeColors[color])(message);
-};
 
 export const checkPermissions = (member: GuildMember, permissions: Array<PermissionResolvable>) => {
 	const neededPermissions: PermissionResolvable[] = [];
@@ -36,6 +30,15 @@ export const sendTimedMessage = (message: string, channel: TextChannel, duration
 		.then(m => setTimeout(async () => (await channel.messages.fetch(m)).delete(), duration));
 	return;
 };
+
+/**
+ * Stringifies input
+ * @param input what to stringify
+ * @returns stringified result (replaces " with ')
+ */
+export function stringify(input: any) {
+	return JSON.stringify(input).replaceAll('"', '\'');
+}
 
 /**
  * Converts an index to the corresponding emoji/s (e.g. index: 0 -> 1️⃣, 11 -> 1️⃣2️⃣)

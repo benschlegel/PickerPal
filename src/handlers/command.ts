@@ -1,29 +1,28 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Client, Routes, SlashCommandBuilder } from 'discord.js';
 import { REST } from '@discordjs/rest';
-import { readdirSync } from 'fs';
-import { join } from 'path';
-import { SlashCommand } from '../types';
+import * as makeChoice from '../commands/makeChoice';
+import * as ping from '../commands/ping';
+import { stringify } from '../functions';
 const process = require('process');
 
-module.exports = (client : Client) => {
+export function commandHandler(client : Client) {
 	const slashCommands : SlashCommandBuilder[] = [];
 
-	const slashCommandsDir = join(__dirname, '../commands');
+	// TODO: add new commands here (+ add import * ...)
+	const commands = [makeChoice, ping];
 
-	readdirSync(slashCommandsDir).forEach(file => {
-		if (!file.endsWith('.ts')) return;
-		const command : SlashCommand = require(`${slashCommandsDir}/${file}`).default;
+	for (const command of commands.map(c => c.default)) {
 		slashCommands.push(command.command);
 		client.slashCommands.set(command.command.name, command);
-	});
+	}
 
 	const rest = new REST({ version: '10' }).setToken(process.env['TOKEN']);
 
 	// deploy commands
 	(async () => {
 		try {
-			console.log(`Started refreshing ${slashCommands.length} application (/) commands.`);
+			console.log(`level=info msg="Started refreshing ${slashCommands.length} application (/) commands."`);
 
 			// The put method is used to fully refresh all commands in the guild with the current set
 			const data: any = await rest.put(
@@ -31,11 +30,11 @@ module.exports = (client : Client) => {
 				{ body: slashCommands.map(command => command.toJSON()) },
 			);
 
-			console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+			console.log(`level=info msg="Successfully reloaded ${data.length} application (/) commands."`);
 		}
 		catch (error) {
 			// And of course, make sure you catch and log any errors!
-			console.error(error);
+			console.log('level=error msg="something went wrong while executing a command" error="' + stringify(error) + '"');
 		}
 	})();
-};
+}
