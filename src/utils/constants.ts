@@ -1,2 +1,2 @@
-export const backgroundColor = '#091b33';
-export const accentColor = '#b87c38';
+export const backgroundColor = '#212737';
+export const accentColor = '#ff6b01';
