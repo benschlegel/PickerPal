@@ -62,6 +62,7 @@ const command : SlashCommand = {
 		// Show the modal to the user
 		// interaction.showModal(modal);
 		const title = interaction.options.get(optionName)?.value as string;
+		const commandUserId = interaction.user.id;
 
 		const choiceEmbed = EmbedBuilder.from(OriginalPollEmbed)
 			.addFields(
@@ -78,7 +79,7 @@ const command : SlashCommand = {
 			components: [choiceRow1, choiceRow2],
 			fetchReply: true,
 		});
-		const choice: CreateChoice = { _id: message.id, choiceTitle: title };
+		const choice: CreateChoice = { _id: message.id, choiceTitle: title, ownerId: commandUserId };
 		await createChoice(choice);
 	},
 };

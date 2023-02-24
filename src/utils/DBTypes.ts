@@ -1,6 +1,7 @@
 export interface CreateChoice {
   // message id
   _id: string;
+  ownerId: string;
   choiceTitle: string;
   isComplete?: boolean;
   finalChoice?: string;

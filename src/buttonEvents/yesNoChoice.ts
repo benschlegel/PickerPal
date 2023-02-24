@@ -1,11 +1,20 @@
 import { APIEmbed, APIEmbedField, ButtonInteraction, CacheType, EmbedBuilder, JSONEncodable } from 'discord.js';
 import { getEmojiFromIndexWithChoice } from '../functions';
-import { clearChoices, addChoice, getChoices, getFullChoice } from '../utils/databaseAcces';
+import { clearChoices, addChoice, getChoices, getFullChoice, isUserChoiceOwner } from '../utils/databaseAcces';
 import { Choice } from '../utils/DBTypes';
 
 export async function yesNoChoice(interaction: ButtonInteraction<CacheType>) {
 	// Database access
 	const messageId = interaction.message?.id as string;
+
+	const commandUserId = interaction.user.id;
+
+	const isOwner = await isUserChoiceOwner(messageId, commandUserId);
+	if (!isOwner) {
+		interaction.reply({ content: ':x: You did not create this choice.', ephemeral: true });
+		return;
+	}
+
 	const yesChoice: Choice = { updateId: messageId, name: 'yes' };
 	const noChoice: Choice = { updateId: messageId, name: 'no' };
 	await clearChoices(messageId);

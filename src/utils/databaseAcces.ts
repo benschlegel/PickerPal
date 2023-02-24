@@ -61,6 +61,15 @@ export async function dropChoices() {
 	await choiceCollection.drop();
 }
 
+export async function isUserChoiceOwner(choiceId: string, userId: string) {
+	const doc = await choiceCollection.findOne(
+		{ _id: choiceId },
+	);
+
+	// user is the owner, if he is the first entry in receivers array
+	return doc?.ownerId === userId;
+}
+
 // export async function editField(id: string, field: keyof CreateChoice, value: any) {
 // 	console.log('field: ' + field + ', vaslue: ' + value);
 // }

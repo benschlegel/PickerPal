@@ -1,11 +1,19 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { APIEmbed, APIEmbedField, ButtonInteraction, CacheType, EmbedBuilder, JSONEncodable } from 'discord.js';
 import { getEmojiFromIndexWithChoice, randomIntFromInterval } from '../functions';
-import { getChoices, getFullChoice, setChoice } from '../utils/databaseAcces';
+import { getChoices, getFullChoice, isUserChoiceOwner, setChoice } from '../utils/databaseAcces';
 
 export async function startChoice(interaction: ButtonInteraction<CacheType>) {
 	// Database access
 	const messageId = interaction.message?.id as string;
+	const commandUserId = interaction.user.id;
+
+	const isOwner = await isUserChoiceOwner(messageId, commandUserId);
+	if (!isOwner) {
+		interaction.reply({ content: ':x: You did not create this choice.', ephemeral: true });
+		return;
+	}
+
 	const choices = await getChoices(messageId) as string[];
 	const fullChoice = await getFullChoice(messageId);
 	if (!fullChoice) {
