@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node --loader ts-node/esm src/index.ts",
-    "build": "esbuild src/index.ts --bundle --platform=node --outfile=build/index.js"
+    "build": "esbuild src/index.ts --bundle --platform=node --outfile=build/index.js",
+    "clearDB": "node --loader ts-node/esm src/scripts/deleteAllChoices.ts"
   },
   "dependencies": {
     "discord.js": "^14.7.1",
