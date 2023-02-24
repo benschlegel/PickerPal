@@ -2,7 +2,7 @@
 <h2 align="center">A simple bot that helps you make a decision by picking one of the options you provide.</h2>
 <br>
 <p align="center">
-  <img src="images/logo.jpg" width=250 />
+  <img src="images/logo.png" width=450 />
 </p>
 
 
