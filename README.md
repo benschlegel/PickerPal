@@ -48,7 +48,7 @@ This will look like the following:
 
 ## Permissions
 
-> - [ x ] Use Application Commands
+##  **Use Application Commands**
 
   - This permission is needed, if you want to use commands and interact with the bot in any way.
 
