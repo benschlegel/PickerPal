@@ -12,3 +12,8 @@ export interface Choice {
   updateId: string;
   name: string;
 }
+
+export interface Userbase {
+  _id: string;
+  ids: string[];
+}

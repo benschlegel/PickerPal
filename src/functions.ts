@@ -1,4 +1,5 @@
 import { GuildMember, PermissionFlagsBits, PermissionResolvable, TextChannel } from 'discord.js';
+import { addToUserbase } from './utils/databaseAcces';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const emojiCharacters = require('./utils/emojiCharacters');
@@ -83,6 +84,20 @@ export function getEmojiFromIndexWithChoice(index: number, choice?: string): str
 		}
 	}
 	return getEmojiFromIndex(index);
+}
+
+/**
+ * Tries to update the userbase prom gauge with an id. If id is already contained, no changes will be made.
+ * @param id user id to be added/checked
+ */
+export function updateUserbase(id: string) {
+	// const endUserbaseTimer = userbaseTimeGauge.startTimer();
+	addToUserbase(id).then((updateResult) => {
+		if (updateResult.modifiedCount > 0) {
+			// userbaseGauge.inc(1);
+		}
+		// endUserbaseTimer();
+	});
 }
 
 export function randomIntFromInterval(min: number, max: number) { // min and max included

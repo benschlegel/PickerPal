@@ -7,7 +7,7 @@ import { ButtonCustomID } from 'src/types';
 
 const addChoiceID: ButtonCustomID = 'add-text-choice';
 const yesNoChoiceID: ButtonCustomID = 'yes-no-choice';
-export const choiceRow1 = new ActionRowBuilder()
+export const choiceRow1 = new ActionRowBuilder<ButtonBuilder>()
 	.addComponents(
 		new ButtonBuilder()
 			.setCustomId(addChoiceID)
@@ -22,7 +22,7 @@ export const choiceRow1 = new ActionRowBuilder()
 	);
 
 const startChoiceID: ButtonCustomID = 'start-choice';
-export const choiceRow2 = new ActionRowBuilder()
+export const choiceRow2 = new ActionRowBuilder<ButtonBuilder>()
 	.addComponents(
 		new ButtonBuilder()
 			.setCustomId(startChoiceID)

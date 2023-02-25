@@ -1,5 +1,5 @@
-import { MongoClient, ObjectId } from 'mongodb';
-import { Choice, CreateChoice } from './DBTypes';
+import { MongoClient } from 'mongodb';
+import { Choice, CreateChoice, Userbase } from './DBTypes';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -7,11 +7,15 @@ const process = require('process');
 const uri = process.env['MONGO_URI'];
 const dbName = 'PickerPal';
 const collectionName = 'choices';
+const collectionNameMetrics = 'metrics';
+const userbaseID = 'userbase';
 // Use connect method to connect to the server
 const dbClient = new MongoClient(uri);
 
 const database = dbClient.db(dbName);
 const choiceCollection = database.collection<CreateChoice>(collectionName);
+const metricCollection = database.collection<Userbase>(collectionNameMetrics);
+
 
 export async function createChoice(choice: CreateChoice): Promise<string> {
 	if (!choice.choices) {
@@ -70,6 +74,29 @@ export async function isUserChoiceOwner(choiceId: string, userId: string) {
 	return doc?.ownerId === userId;
 }
 
-// export async function editField(id: string, field: keyof CreateChoice, value: any) {
-// 	console.log('field: ' + field + ', vaslue: ' + value);
-// }
+/**
+ * Adds id to userbase
+ * @param id new id to be added
+ * @returns updated result (containing amount of changes)
+ */
+export async function addToUserbase(id: string) {
+	return metricCollection.updateOne(
+		{ _id: userbaseID },
+		{
+			$addToSet: { ids: id },
+		},
+	);
+}
+
+
+export async function getUserbaseSize() {
+	const aggregate = metricCollection.aggregate([
+		{
+			$project: {
+				_id: 0,
+				size: { $size: '$ids' },
+			},
+		},
+	]);
+	return aggregate;
+}

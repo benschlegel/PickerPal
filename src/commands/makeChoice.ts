@@ -1,5 +1,6 @@
-import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, ModalActionRowComponentBuilder } from 'discord.js';
-import { CreateChoice } from 'src/utils/DBTypes';
+import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, ModalActionRowComponentBuilder, ChatInputCommandInteraction, Message } from 'discord.js';
+import { stringify, updateUserbase } from '../functions';
+import { CreateChoice } from '../utils/DBTypes';
 import { choiceRow1, choiceRow2 } from '../components/buttons';
 import { OriginalPollEmbed } from '../components/embeds';
 import { SlashCommand } from '../types';
@@ -52,17 +53,15 @@ const command : SlashCommand = {
 			option
 				.setName(optionYesNo)
 				.setDescription('True, if the poll doesnt have options and is only a "yes" or "no" question. (defaults to false)')
-				.setRequired(false))
-		.addMentionableOption(option =>
-			option
-				.setName('mention')
-				.setDescription('Testing mention')
 				.setRequired(false)),
-	async execute(interaction: any) {
+	async execute(interaction: ChatInputCommandInteraction) {
 		// Show the modal to the user
 		// interaction.showModal(modal);
 		const title = interaction.options.get(optionName)?.value as string;
 		const commandUserId = interaction.user.id;
+		updateUserbase(commandUserId);
+
+		console.log('level=trace command="/makeChoice" userId=' + commandUserId + ' username="' + interaction.user.username + '"');
 
 		const choiceEmbed = EmbedBuilder.from(OriginalPollEmbed)
 			.addFields(
@@ -72,15 +71,23 @@ const command : SlashCommand = {
 			.setTimestamp(new Date())
 		;
 
-		const message = await interaction.reply({
+
+		interaction.reply({
 			embeds: [
 				choiceEmbed,
 			],
 			components: [choiceRow1, choiceRow2],
 			fetchReply: true,
+		}).catch(err => {
+			console.log('level=error command="/makeChoice" error="' + stringify(err) + '"');
+		}).then(async (msg) => {
+			if (!msg) {
+				console.log('level=error command="/makeChoice" error="Resulting interaction reply message is void"');
+				return;
+			}
+			const choice: CreateChoice = { _id: msg.id, choiceTitle: title, ownerId: commandUserId };
+			await createChoice(choice);
 		});
-		const choice: CreateChoice = { _id: message.id, choiceTitle: title, ownerId: commandUserId };
-		await createChoice(choice);
 	},
 };
 
