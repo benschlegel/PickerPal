@@ -33,7 +33,7 @@ You could also use `✏️ Add choice` to manually add more options (this is use
 
 An example of this would be:
 
-> `/make-choice 'What do i get to eat'`.
+> `/make-choice 'What should i get to eat?'`.
 
 Then, you could use `✏️ Add choice` to add options like `Pizza`, etc.
 
@@ -41,7 +41,9 @@ Once you're done with adding your options, you can use `✅ Make choice` to let 
 
 This will look like the following:
 
-<img alt="make-choice" src="https://i.imgur.com/kY7yolG.png" />
+Basic yes/no choice             |  Custom options
+:-------------------------:|:-------------------------:
+![basic example](https://i.imgur.com/kY7yolG.png)  |  ![custom options](https://i.imgur.com/W4x6kkA.png)
 
 
 
@@ -68,6 +70,7 @@ To set this project up locally, you have to:
 ### Setup file
 The file needed to start the bot needs to contain the following things:
 
+*`startBot.ps1`*
 ```ps1
 # Save this file as `startBot.ps1`
 # can be ported for linux/mac as well, use appropriate syntax
