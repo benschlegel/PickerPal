@@ -1,5 +1,8 @@
-<h1 align="center">PickerPal</h1>
-<h2 align="center">A discord bot that helps you make a decision by picking between options you provide.</h2>
+# PickerPal
+> A discord bot that helps you make a decision by picking between options you provide.
+
+<a href="https://discord.com/api/oauth2/authorize?client_id=1058782828109758497&permissions=2147483648&scope=bot%20applications.commands"><img src="https://img.shields.io/static/v1?label=Invite%20Me&message=PickerPal%231862&plastic&color=5865F2&logo=discord"></a>
+<img src="https://badgen.net/badge/icon/typescript?icon=typescript&label">
 <br>
 <p align="center">
   <img src="images/logo.png" width=450 />
