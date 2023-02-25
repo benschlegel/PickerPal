@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, ModalActionRowComponentBuilder, ChatInputCommandInteraction, Message } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ModalActionRowComponentBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { stringify, updateUserbase } from '../functions';
 import { CreateChoice } from '../utils/DBTypes';
 import { choiceRow1, choiceRow2 } from '../components/buttons';

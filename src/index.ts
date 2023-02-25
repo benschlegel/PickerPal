@@ -1,11 +1,9 @@
 // Require the necessary discord.js classes
-import { ActionRowBuilder, APIEmbed, APIEmbedField, Client, Collection, EmbedBuilder, Events, GatewayIntentBits, IntentsBitField, InteractionType, JSONEncodable, ModalActionRowComponentBuilder, ModalBuilder, Partials, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { APIEmbed, APIEmbedField, Client, Collection, EmbedBuilder, Events, GatewayIntentBits, IntentsBitField, InteractionType, JSONEncodable, Partials } from 'discord.js';
 import { ButtonCustomID, ModalCustomID, SlashCommand } from './types';
-import { readdirSync } from 'fs';
-import { join } from 'path';
 import { Choice } from './utils/DBTypes';
-import { addChoice, clearChoices, deleteOldPolls, getChoices, getFullChoice, getUserbaseSize, setChoice } from './utils/databaseAcces';
-import { getEmojiFromIndexWithChoice, randomIntFromInterval, stringify } from './functions';
+import { addChoice, deleteOldPolls, getChoices, getFullChoice, getUserbaseSize } from './utils/databaseAcces';
+import { getEmojiFromIndexWithChoice, stringify } from './functions';
 import { commandHandler } from './handlers/command';
 import { addTextChoice } from './buttonEvents/addTextChoice';
 import { yesNoChoice } from './buttonEvents/yesNoChoice';

@@ -6,11 +6,6 @@ import fastify from 'fastify';
 
 export const server = fastify();
 
-// Declare a route
-server.get('/', async (request, reply) => {
-	return { hello: 'world' };
-});
-
 // Run the server!
 const start = async () => {
 	try {
