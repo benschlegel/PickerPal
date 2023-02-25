@@ -2,12 +2,14 @@ import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { backgroundColor } from '../utils/constants';
 import { SlashCommand } from '../types';
 import { stringify, updateUserbase } from '../functions';
+import { promNumRequests } from '../monitoring/prometheus';
 
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
 		.setName('ping')
 		.setDescription('Shows the bot\'s ping'),
 	async execute(interaction) {
+		promNumRequests.inc({ ping: 1 });
 		const commandUserId = interaction.user.id;
 		updateUserbase(commandUserId);
 

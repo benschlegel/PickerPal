@@ -4,13 +4,14 @@ import { ButtonCustomID, ModalCustomID, SlashCommand } from './types';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 import { Choice } from './utils/DBTypes';
-import { addChoice, clearChoices, deleteOldPolls, getChoices, getFullChoice, setChoice } from './utils/databaseAcces';
+import { addChoice, clearChoices, deleteOldPolls, getChoices, getFullChoice, getUserbaseSize, setChoice } from './utils/databaseAcces';
 import { getEmojiFromIndexWithChoice, randomIntFromInterval, stringify } from './functions';
 import { commandHandler } from './handlers/command';
 import { addTextChoice } from './buttonEvents/addTextChoice';
 import { yesNoChoice } from './buttonEvents/yesNoChoice';
 import { startChoice } from './buttonEvents/startChoice';
 import { server } from './monitoring/startFastify';
+import { uptimeGauge, userbaseGauge } from './monitoring/prometheus';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -23,9 +24,17 @@ setInterval(deleteOldPolls, deleteInterval);
 setInterval(checkAliveAndRestart, checkAliveInterval);
 
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions, IntentsBitField.Flags.DirectMessages, IntentsBitField.Flags.DirectMessageReactions], partials: [Partials.Channel] });
+export const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions, IntentsBitField.Flags.DirectMessages, IntentsBitField.Flags.DirectMessageReactions], partials: [Partials.Channel] });
 
 console.log('level=trace msg="Fastify server is up." server="' + stringify(server) + '"');
+
+getUserbaseSize().then((res) => {
+	const arr = res.toArray();
+	arr.then((doc) => {
+		const size = doc[0]['size'];
+		userbaseGauge.set(size);
+	});
+});
 
 // When the client is ready, run this code (only once)
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
@@ -125,6 +134,15 @@ client.login(process.env['TOKEN']);
 // Maybe move this to /intervalFunctions, see if exporting client works (+ find way to change checkAliveInterval)
 function checkAliveAndRestart() {
 	console.log('level=trace msg="last alive at" data="' + client.readyAt?.toLocaleString() + '"');
+
+	// Set uptime
+	if (client.uptime) {
+		uptimeGauge.set(client.uptime);
+	}
+	else {
+		// If no uptime found, set to 0
+		uptimeGauge.set(0);
+	}
 
 	const shard0 = client.ws.shards.get(0);
 	if (shard0) {

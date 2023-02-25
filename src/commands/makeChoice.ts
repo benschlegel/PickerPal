@@ -5,6 +5,7 @@ import { choiceRow1, choiceRow2 } from '../components/buttons';
 import { OriginalPollEmbed } from '../components/embeds';
 import { SlashCommand } from '../types';
 import { createChoice } from '../utils/databaseAcces';
+import { promNumRequests } from '../monitoring/prometheus';
 
 
 // Name of options
@@ -55,14 +56,17 @@ const command : SlashCommand = {
 				.setDescription('True, if the poll doesnt have options and is only a "yes" or "no" question. (defaults to false)')
 				.setRequired(false)),
 	async execute(interaction: ChatInputCommandInteraction) {
-		// Show the modal to the user
-		// interaction.showModal(modal);
+		// Update prometheus counter
+		promNumRequests.inc({ makeChoice: 1 });
+
+		// Get interaction values
 		const title = interaction.options.get(optionName)?.value as string;
 		const commandUserId = interaction.user.id;
 		updateUserbase(commandUserId);
 
 		console.log('level=trace command="/makeChoice" userId=' + commandUserId + ' username="' + interaction.user.username + '"');
 
+		// Create new embed using values from interaction
 		const choiceEmbed = EmbedBuilder.from(OriginalPollEmbed)
 			.addFields(
 				{ name: '📊 Prompt', value: title ?? 'no name provided' },
@@ -71,7 +75,7 @@ const command : SlashCommand = {
 			.setTimestamp(new Date())
 		;
 
-
+		// Send reply with embed and buttons (components)
 		interaction.reply({
 			embeds: [
 				choiceEmbed,

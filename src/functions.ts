@@ -1,4 +1,5 @@
 import { GuildMember, PermissionFlagsBits, PermissionResolvable, TextChannel } from 'discord.js';
+import { userbaseGauge } from './monitoring/prometheus';
 import { addToUserbase } from './utils/databaseAcces';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -94,7 +95,7 @@ export function updateUserbase(id: string) {
 	// const endUserbaseTimer = userbaseTimeGauge.startTimer();
 	addToUserbase(id).then((updateResult) => {
 		if (updateResult.modifiedCount > 0) {
-			// userbaseGauge.inc(1);
+			userbaseGauge.inc(1);
 		}
 		// endUserbaseTimer();
 	});
