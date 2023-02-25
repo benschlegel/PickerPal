@@ -1,10 +1,9 @@
 <h1 align="center">PickerPal</h1>
-<h2 align="center">A discord bot that helps you make a decision by picking between options you provide.</h2>
+
 <br>
 <p align="center">
   <img src="images/logo.png" width=450 />
 </p>
-
 
 ---
 
