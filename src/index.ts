@@ -10,6 +10,7 @@ import { commandHandler } from './handlers/command';
 import { addTextChoice } from './buttonEvents/addTextChoice';
 import { yesNoChoice } from './buttonEvents/yesNoChoice';
 import { startChoice } from './buttonEvents/startChoice';
+import { server } from './monitoring/startFastify';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -23,6 +24,8 @@ setInterval(checkAliveAndRestart, checkAliveInterval);
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions, IntentsBitField.Flags.DirectMessages, IntentsBitField.Flags.DirectMessageReactions], partials: [Partials.Channel] });
+
+console.log('level=trace msg="Fastify server is up." server="' + stringify(server) + '"');
 
 // When the client is ready, run this code (only once)
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
@@ -106,7 +109,7 @@ client.on('interactionCreate', async interaction => {
 	if (!command) return;
 
 	try {
-		await command.execute(interaction);
+		await command.execute(interaction as any);
 	}
 	catch (error) {
 		console.error(error);
