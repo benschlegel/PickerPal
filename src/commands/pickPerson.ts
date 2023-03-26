@@ -7,11 +7,12 @@ import { OriginalPollEmbed } from '../components/embeds';
 
 const channelOption = 'channel';
 const pickOption = 'picks';
+const titleOption = 'title';
 
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
 		.setName('pick-person')
-		.setDescription('Picks a random person from a voice channel (set "picks" for multiple)')
+		.setDescription('Picks a random person from a voice channel (set "picks" for multiple, set "title" for title)')
 		.addChannelOption(option =>
 			option
 				.setRequired(true)
@@ -25,16 +26,24 @@ const command : SlashCommand = {
 				.setRequired(false)
 				.setName(pickOption)
 				.setDescription('How many people to choose (e.g. "2" will choose 2 people from selected voice channel)'),
+		)
+		.addStringOption(option =>
+			option
+				.setName(titleOption)
+				.setDescription('Title for this pick (e.g. "who is on team blue?")')
+				.setRequired(false),
 		),
 	async execute(interaction) {
 		// Prometheus
 		promNumRequests.inc({ ping: 1 });
 		const commandUserId = interaction.user.id;
 		updateUserbase(commandUserId);
+		console.log('level=trace command="/pick-person" userId=' + commandUserId + ' username="' + interaction.user.username + '"');
 
 		// Get options
 		const channel = interaction.options.getChannel(channelOption, true, [ChannelType.GuildVoice]);
 		const pickOriginal = interaction.options.getInteger(pickOption);
+		const title = interaction.options.getString(titleOption);
 
 		// Get member ids from VoiceChannel
 		const members = channel.members.map(m => m.id);
@@ -49,29 +58,40 @@ const command : SlashCommand = {
 		const pickAmount = pickOriginal ? Math.min(pickOriginal, members.length) : 1;
 
 		// Randomly pick
-		// const test = ['229895364147281920', '162948428316278785', '1073523890439073852', '1014094725093019698'];
 		const resultPicks = randomEntriesFromArray(pickAmount, members);
-		console.log('Result: ', resultPicks);
 
-		console.log('level=trace command="/pick-person" userId=' + commandUserId + ' username="' + interaction.user.username + '"');
+		// Construct embed
 		const headerMessage = '<@' + commandUserId + '> started pick for <#' + channel.id + '>.';
-
 		let resultMessage = '';
 
-		for (const user of members) {
+		for (const user of resultPicks) {
 			resultMessage += '- <@' + user + '>';
 		}
+
+		// Basic embed
 		const embed = EmbedBuilder.from(OriginalPollEmbed)
 			.addFields(
 				{ name: '🎲 Picks', value: headerMessage },
 				{ name: '\u200B', value: '\u200B' },
-				{ name:  '⚡ Choices', value: resultMessage })
+			)
 			.setTimestamp(new Date())
 			.setAuthor(null);
+
+		// Add title if it exists
+		if (title) {
+			embed.addFields(
+				{ name: '📜 Title', value: title },
+				{ name: '\u200B', value: '\u200B' },
+			);
+		}
+
+		// Add results
+		embed.addFields({ name:  '⚡ Choices', value: resultMessage });
 		await interaction.reply({
 			embeds: [
 				embed,
 			],
+			content: 'Test',
 		}).catch(err => {
 			console.log('level=error command="/pick-person" error="' + stringify(err) + '"');
 		});
