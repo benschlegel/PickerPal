@@ -22,7 +22,8 @@ setInterval(deleteOldPolls, deleteInterval);
 setInterval(checkAliveAndRestart, checkAliveInterval);
 
 // Create a new client instance
-export const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions, IntentsBitField.Flags.DirectMessages, IntentsBitField.Flags.DirectMessageReactions], partials: [Partials.Channel] });
+// TODO: remove duplicate intents (IntentBitField.Flags = GatewayIntentBits)
+export const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions, IntentsBitField.Flags.DirectMessages, IntentsBitField.Flags.DirectMessageReactions, GatewayIntentBits.GuildVoiceStates], partials: [Partials.Channel] });
 
 console.log('level=trace msg="Fastify server is up." server="' + stringify(server) + '"');
 

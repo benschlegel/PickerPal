@@ -9,7 +9,7 @@
     "clearDB": "node --loader ts-node/esm src/scripts/deleteAllChoices.ts"
   },
   "dependencies": {
-    "discord.js": "^14.7.1",
+    "discord.js": "^14.8.0",
     "fastify": "^4.13.0",
     "mongodb": "^4.13.0",
     "prom-client": "^14.1.1",
