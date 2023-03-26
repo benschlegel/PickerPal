@@ -3,6 +3,7 @@ import { backgroundColor } from '../utils/constants';
 import { SlashCommand } from '../types';
 import { randomEntriesFromArray, stringify, updateUserbase } from '../functions';
 import { promNumRequests } from '../monitoring/prometheus';
+import { OriginalPollEmbed } from '../components/embeds';
 
 const channelOption = 'channel';
 const pickOption = 'picks';
@@ -34,10 +35,18 @@ const command : SlashCommand = {
 		// Get options
 		const channel = interaction.options.getChannel(channelOption, true, [ChannelType.GuildVoice]);
 		const pickOriginal = interaction.options.getInteger(pickOption);
-		const pickAmount = pickOriginal ? pickOriginal : 1;
 
 		// Get member ids from VoiceChannel
 		const members = channel.members.map(m => m.id);
+
+		// Send error if no members in voice channel
+		if (members.length === 0) {
+			await interaction.reply({ content: ':warning: There are currently no members in the selected voice channel. Only works if there are people in selected voice channel.', ephemeral: true });
+			return;
+		}
+
+		// Set pick amount (defaults to 1, if 'picks' is set via options, set to min between 'picks' option and number of people in voice channel [so no invalid state can be reached if picks is higher than members.length])
+		const pickAmount = pickOriginal ? Math.min(pickOriginal, members.length) : 1;
 
 		// Randomly pick
 		// const test = ['229895364147281920', '162948428316278785', '1073523890439073852', '1014094725093019698'];
@@ -45,12 +54,23 @@ const command : SlashCommand = {
 		console.log('Result: ', resultPicks);
 
 		console.log('level=trace command="/pick-person" userId=' + commandUserId + ' username="' + interaction.user.username + '"');
-		interaction.reply({
+		const headerMessage = '<@' + commandUserId + '> started pick for <#' + channel.id + '>.';
+
+		let resultMessage = '';
+
+		for (const user of members) {
+			resultMessage += '- <@' + user + '>';
+		}
+		const embed = EmbedBuilder.from(OriginalPollEmbed)
+			.addFields(
+				{ name: '🎲 Picks', value: headerMessage },
+				{ name: '\u200B', value: '\u200B' },
+				{ name:  '⚡ Choices', value: resultMessage })
+			.setTimestamp(new Date())
+			.setAuthor(null);
+		await interaction.reply({
 			embeds: [
-				new EmbedBuilder()
-					.setAuthor({ name: 'Bot ping' })
-					.setDescription(`🏓 Pong! \n 📡 Ping: ${interaction.client.ws.ping}`)
-					.setColor(backgroundColor),
+				embed,
 			],
 		}).catch(err => {
 			console.log('level=error command="/pick-person" error="' + stringify(err) + '"');
