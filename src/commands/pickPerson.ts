@@ -65,7 +65,7 @@ const command : SlashCommand = {
 		let resultMessage = '';
 
 		for (const user of resultPicks) {
-			resultMessage += '- <@' + user + '>';
+			resultMessage += '- <@' + user + '>\n';
 		}
 
 		// Basic embed
@@ -91,7 +91,6 @@ const command : SlashCommand = {
 			embeds: [
 				embed,
 			],
-			content: 'Test',
 		}).catch(err => {
 			console.log('level=error command="/pick-person" error="' + stringify(err) + '"');
 		});
