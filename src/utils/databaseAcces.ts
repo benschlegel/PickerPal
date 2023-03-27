@@ -36,6 +36,18 @@ export async function addChoice(choice: Choice) {
 	);
 }
 
+/**
+ * Add multiple choices at once
+ * @param choices choices to add, entry at [0] used for .updateId
+ */
+export async function addChoices(choices: Choice[]) {
+	const names = choices.map(x => x.name);
+	await choiceCollection.updateOne(
+		{ _id: choices[0].updateId },
+		{ $push: { choices: { $each: names } } },
+	);
+}
+
 export async function setChoice(id: string, choice: CreateChoice) {
 	await choiceCollection.findOneAndReplace(
 		{ _id: choice._id },

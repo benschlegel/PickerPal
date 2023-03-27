@@ -2,7 +2,7 @@
 import { APIEmbed, APIEmbedField, Client, Collection, EmbedBuilder, Events, GatewayIntentBits, IntentsBitField, InteractionType, JSONEncodable, Partials } from 'discord.js';
 import { ButtonCustomID, ModalCustomID, SlashCommand } from './types';
 import { Choice } from './utils/DBTypes';
-import { addChoice, deleteOldPolls, getChoices, getFullChoice, getUserbaseSize } from './utils/databaseAcces';
+import { addChoice, addChoices, deleteOldPolls, getChoices, getFullChoice, getUserbaseSize } from './utils/databaseAcces';
 import { getEmojiFromIndexWithChoice, stringify } from './functions';
 import { commandHandler } from './handlers/command';
 import { addTextChoice } from './buttonEvents/addTextChoice';
@@ -71,10 +71,20 @@ client.on('interactionCreate', async interaction => {
 			// Response from modal input field
 			const response = interaction.fields.getTextInputValue('verification-input');
 
+			// splits by newline, .filter removes empty lines
+			const newChoices = response.split('\n').filter(n => n);
+
 			// Database access
 			const messageId = interaction.message?.id as string;
-			const newChoice: Choice = { updateId: messageId, name: response };
-			await addChoice(newChoice);
+			const dbChoices: Choice[] = [];
+
+			// Add all "newChoice" strings to "Choice" type
+			for (const choice of newChoices) {
+				dbChoices.push({ updateId: messageId, name: choice });
+			}
+
+			// Add all new choices to tb
+			await addChoices(dbChoices);
 			const choices = await getChoices(messageId) as string[];
 			const fullChoice = await getFullChoice(messageId);
 			const choiceTitle = fullChoice?.choiceTitle as string;

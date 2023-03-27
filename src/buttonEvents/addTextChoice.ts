@@ -19,6 +19,8 @@ export async function addTextChoice(interaction: ButtonInteraction<CacheType>) {
 		await interaction.reply({ content: ':warning: Choice has already been decided, start a new one to add choices.\n:x: Did not complete action.', ephemeral: true });
 		return;
 	}
+
+	// TODO: switch to TextInputStyle.Paragraph, split by \n add as individual choices,
 	const modal = new ModalBuilder()
 		.setCustomId('text-option-modal' as ModalCustomID)
 		.setTitle('Add new choice...')
@@ -27,7 +29,7 @@ export async function addTextChoice(interaction: ButtonInteraction<CacheType>) {
 				new TextInputBuilder()
 					.setCustomId('verification-input')
 					.setLabel('Choice:')
-					.setStyle(TextInputStyle.Short)
+					.setStyle(TextInputStyle.Paragraph)
 					.setPlaceholder('New choice...')
 					.setValue('')
 					.setRequired(true),
