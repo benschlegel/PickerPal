@@ -1,4 +1,4 @@
-import { GuildMember, PermissionFlagsBits, PermissionResolvable, TextChannel } from 'discord.js';
+import { APIEmbed, APIEmbedField, ButtonInteraction, CacheType, EmbedBuilder, GuildMember, JSONEncodable, ModalSubmitInteraction, PermissionFlagsBits, PermissionResolvable, TextChannel } from 'discord.js';
 import { userbaseGauge } from './monitoring/prometheus';
 import { addToUserbase } from './utils/databaseAcces';
 
@@ -105,6 +105,12 @@ export function randomIntFromInterval(min: number, max: number) { // min and max
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+/**
+ * Picks random entries from an array
+ * @param picks how many entries to pick
+ * @param arr what array to pick from
+ * @returns resulting picks
+ */
 export function randomEntriesFromArray(picks: number, arr: any[]) {
 	// Shuffle array
 	const shuffled = arr.sort(() => 0.5 - Math.random());
@@ -113,4 +119,40 @@ export function randomEntriesFromArray(picks: number, arr: any[]) {
 	const selected = shuffled.slice(0, picks);
 
 	return selected;
+}
+
+/**
+ * Updates a choice embed
+ * @param choices new choices to update with
+ * @param interaction interaction the event came from
+ * @param choiceTitle title of the choice
+ */
+export function updateChoices(choices: string[], interaction: ButtonInteraction<CacheType> | ButtonInteraction<CacheType> | ModalSubmitInteraction<CacheType>, choiceTitle: string) {
+	// Build new embed
+	// Fill in static fields
+	const newFields: APIEmbedField[] = [
+		{ name: '\u200B', value: '\u200B' },
+		{ name: '📊 Prompt', value: choiceTitle },
+		{ name: '\u200B', value: '\u200B' },
+	];
+
+	// Add choices
+	for (let i = 0; i < choices.length; i++) {
+		newFields.push({ name: getEmojiFromIndexWithChoice(i, choices[i]) + ' Choice', value: choices[i] });
+	}
+
+	// Get old embed
+	const receivedEmbed = interaction.message?.embeds[0] as APIEmbed | JSONEncodable<APIEmbed>;
+	const choiceEmbed = EmbedBuilder.from(receivedEmbed);
+	interaction.message?.edit({
+		embeds: [
+			choiceEmbed
+				.setDescription('*⚡ click "Make choice" button to start decision*')
+				.setFields([])
+				.addFields(
+					newFields,
+				),
+		],
+	});
+	interaction.deferUpdate();
 }
