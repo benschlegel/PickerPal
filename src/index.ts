@@ -61,8 +61,7 @@ client.on('interactionCreate', async interaction => {
 		}
 	}
 
-	// TODO: fix polls in private chat
-	// TODO: only let author edit poll
+	// TODO: update modal text to indicate multiple choices
 	// TODO: add uniform error response handler
 
 	// Gets executed after modal submit
