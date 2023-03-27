@@ -1,11 +1,14 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { APIEmbed, APIEmbedField, ButtonInteraction, CacheType, EmbedBuilder, JSONEncodable } from 'discord.js';
+import { APIEmbedField, ButtonInteraction, CacheType, EmbedBuilder } from 'discord.js';
 import { getEmojiFromIndexWithChoice, randomIntFromInterval } from '../functions';
 import { getChoices, getFullChoice, isUserChoiceOwner, setChoice } from '../utils/databaseAcces';
 
+// How many choices are required before you can start
+const minChoices = 2;
+
 export async function startChoice(interaction: ButtonInteraction<CacheType>) {
 	// Database access
-	const messageId = interaction.message?.id as string;
+	const messageId = interaction.message?.id;
 	const commandUserId = interaction.user.id;
 
 	const isOwner = await isUserChoiceOwner(messageId, commandUserId);
@@ -17,6 +20,7 @@ export async function startChoice(interaction: ButtonInteraction<CacheType>) {
 	const choices = await getChoices(messageId) as string[];
 	const fullChoice = await getFullChoice(messageId);
 	if (!fullChoice) {
+		await interaction.reply({ content: ':warning: Choice not found.', ephemeral: true });
 		return;
 	}
 	// Send error message if no choices have been added
@@ -26,8 +30,8 @@ export async function startChoice(interaction: ButtonInteraction<CacheType>) {
 	}
 
 	// Send error message if there's not enough options
-	if (choices.length < 2) {
-		await interaction.reply({ content: ':warning: Add at least 2 options to make decision.\n:x: Did not complete action.', ephemeral: true });
+	if (choices.length < minChoices) {
+		await interaction.reply({ content: ':warning: Add at least ' + minChoices + ' options to make decision.\n:x: Did not complete action.', ephemeral: true });
 		return;
 	}
 
@@ -58,14 +62,14 @@ export async function startChoice(interaction: ButtonInteraction<CacheType>) {
 	newFields.push({ name: '\u200B', value: '\u200B' });
 	newFields.push({ name: '⚡ Final Decision', value: getEmojiFromIndexWithChoice(winningChoiceIndex, finalChoice) + ' ' + finalChoice });
 
-  // Set database entries
-  fullChoice!.isComplete = true;
-  fullChoice!.finalChoice = finalChoice;
-  await setChoice(messageId, fullChoice!);
-  // Get old embed
-  const receivedEmbed = interaction.message?.embeds[0] as APIEmbed | JSONEncodable<APIEmbed>;
-  const choiceEmbed = EmbedBuilder.from(receivedEmbed);
-  interaction.message?.edit({
+	// Set database entries
+	fullChoice.isComplete = true;
+	fullChoice.finalChoice = finalChoice;
+	await setChoice(messageId, fullChoice);
+	// Get old embed
+	const receivedEmbed = interaction.message?.embeds[0];
+	const choiceEmbed = EmbedBuilder.from(receivedEmbed);
+	interaction.message?.edit({
   	embeds: [
   		choiceEmbed
   			.setDescription(':warning: *This choice has been decided.*')
@@ -75,6 +79,6 @@ export async function startChoice(interaction: ButtonInteraction<CacheType>) {
   			),
   	],
   	components: [],
-  });
-  interaction.deferUpdate();
+	});
+	interaction.deferUpdate();
 }
