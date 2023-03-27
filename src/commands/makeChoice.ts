@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, InteractionReplyOptions } from 'discord.js';
 import { stringify, updateUserbase } from '../functions';
 import { CreateChoice } from '../utils/DBTypes';
 import { choiceRow1, choiceRow2 } from '../components/buttons';
@@ -6,6 +6,7 @@ import { OriginalPollEmbed } from '../components/embeds';
 import { SlashCommand } from '../types';
 import { addYesNoChoices, createChoice } from '../utils/databaseAcces';
 import { promNumRequests } from '../monitoring/prometheus';
+import { makeYesNoChoice } from '../utils/makeYesNoChoice';
 
 
 // Name of options
@@ -49,12 +50,21 @@ const command : SlashCommand = {
 			.setTimestamp(new Date())
 		;
 
+		let components: InteractionReplyOptions['components'] = [choiceRow1, choiceRow2];
+		if (useYesNoOption) {
+			// create embed
+			const yesNoEmbed = makeYesNoChoice(title);
+			choiceEmbed.setFields(yesNoEmbed.data.fields!);
+
+			// clear components
+			components = [];
+		}
 		// Send reply with embed and buttons (components)
 		interaction.reply({
 			embeds: [
 				choiceEmbed,
 			],
-			components: [choiceRow1, choiceRow2],
+			components: components,
 			fetchReply: true,
 		}).catch(err => {
 			console.log('level=error command="/makeChoice" error="' + stringify(err) + '"');
