@@ -1,9 +1,8 @@
 // Require the necessary discord.js classes
-import { APIEmbed, APIEmbedField, Client, Collection, EmbedBuilder, Events, GatewayIntentBits, IntentsBitField, InteractionType, JSONEncodable, Partials } from 'discord.js';
+import { Client, Collection, Events, GatewayIntentBits, InteractionType, Partials } from 'discord.js';
 import { ButtonCustomID, ModalCustomID, SlashCommand } from './types';
-import { Choice } from './utils/DBTypes';
-import { addChoice, addChoices, deleteOldPolls, getChoices, getFullChoice, getUserbaseSize } from './utils/databaseAcces';
-import { getEmojiFromIndexWithChoice, stringify } from './functions';
+import { deleteOldPolls, getUserbaseSize } from './utils/databaseAcces';
+import { stringify } from './functions';
 import { commandHandler } from './handlers/command';
 import { addTextChoice } from './buttonEvents/addTextChoice';
 import { yesNoChoice } from './buttonEvents/yesNoChoice';
@@ -23,8 +22,7 @@ setInterval(deleteOldPolls, deleteInterval);
 setInterval(checkAliveAndRestart, checkAliveInterval);
 
 // Create a new client instance
-// TODO: remove duplicate intents (IntentBitField.Flags = GatewayIntentBits)
-export const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions, IntentsBitField.Flags.DirectMessages, IntentsBitField.Flags.DirectMessageReactions, GatewayIntentBits.GuildVoiceStates], partials: [Partials.Channel] });
+export const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildVoiceStates], partials: [Partials.Channel] });
 
 console.log('level=trace msg="Fastify server is up." server="' + stringify(server) + '"');
 
