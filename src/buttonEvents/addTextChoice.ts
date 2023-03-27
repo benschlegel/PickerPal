@@ -20,7 +20,6 @@ export async function addTextChoice(interaction: ButtonInteraction<CacheType>) {
 		return;
 	}
 
-	// TODO: switch to TextInputStyle.Paragraph, split by \n add as individual choices,
 	const modal = new ModalBuilder()
 		.setCustomId('text-option-modal' as ModalCustomID)
 		.setTitle('Add new choice...')
@@ -28,9 +27,10 @@ export async function addTextChoice(interaction: ButtonInteraction<CacheType>) {
 			new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
 				new TextInputBuilder()
 					.setCustomId('verification-input')
-					.setLabel('Choice:')
+					.setLabel('Add choices (use new line for multiple):')
 					.setStyle(TextInputStyle.Paragraph)
-					.setPlaceholder('New choice...')
+					.setPlaceholder('New choice(s)...')
+					.setMaxLength(300)
 					.setValue('')
 					.setRequired(true),
 			),

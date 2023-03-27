@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, EmbedBuilder, ChannelType } from 'discord.js';
-import { backgroundColor } from '../utils/constants';
 import { SlashCommand } from '../types';
 import { randomEntriesFromArray, stringify, updateUserbase } from '../functions';
 import { promNumRequests } from '../monitoring/prometheus';

@@ -11,7 +11,7 @@ export const choiceRow1 = new ActionRowBuilder<ButtonBuilder>()
 	.addComponents(
 		new ButtonBuilder()
 			.setCustomId(addChoiceID)
-			.setLabel('✏️ Add choice')
+			.setLabel('✏️ Add choice(s)')
 			.setStyle(ButtonStyle.Primary),
 	)
 	.addComponents(
