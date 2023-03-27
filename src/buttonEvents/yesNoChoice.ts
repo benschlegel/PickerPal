@@ -1,12 +1,10 @@
 import { APIEmbed, APIEmbedField, ButtonInteraction, CacheType, EmbedBuilder, JSONEncodable } from 'discord.js';
 import { getEmojiFromIndexWithChoice } from '../functions';
-import { clearChoices, addChoice, getChoices, getFullChoice, isUserChoiceOwner } from '../utils/databaseAcces';
-import { Choice } from '../utils/DBTypes';
+import { clearChoices, getChoices, getFullChoice, isUserChoiceOwner, addYesNoChoices } from '../utils/databaseAcces';
 
 export async function yesNoChoice(interaction: ButtonInteraction<CacheType>) {
 	// Database access
 	const messageId = interaction.message?.id as string;
-
 	const commandUserId = interaction.user.id;
 
 	const isOwner = await isUserChoiceOwner(messageId, commandUserId);
@@ -15,11 +13,10 @@ export async function yesNoChoice(interaction: ButtonInteraction<CacheType>) {
 		return;
 	}
 
-	const yesChoice: Choice = { updateId: messageId, name: 'yes' };
-	const noChoice: Choice = { updateId: messageId, name: 'no' };
+	// Clear existing choices and add yes/no
 	await clearChoices(messageId);
-	await addChoice(yesChoice);
-	await addChoice(noChoice);
+	await addYesNoChoices(messageId);
+
 	const choices = await getChoices(messageId) as string[];
 	const fullChoice = await getFullChoice(messageId);
 	const choiceTitle = fullChoice?.choiceTitle as string;
@@ -29,7 +26,6 @@ export async function yesNoChoice(interaction: ButtonInteraction<CacheType>) {
 		await interaction.reply({ content: ':warning: Choice has already been decided, start a new one if you want to reroll.\n:x: Did not complete action.', ephemeral: true });
 		return;
 	}
-	// TODO: refactor duplicate code
 	// Build new embed
 	// Fill in static fields
 	const newFields: APIEmbedField[] = [

@@ -48,6 +48,12 @@ export async function addChoices(choices: Choice[]) {
 	);
 }
 
+export async function addYesNoChoices(choiceId: string) {
+	const yesChoice: Choice = { updateId: choiceId, name: 'yes' };
+	const noChoice: Choice = { updateId: choiceId, name: 'no' };
+	addChoices([yesChoice, noChoice]);
+}
+
 export async function setChoice(id: string, choice: CreateChoice) {
 	await choiceCollection.findOneAndReplace(
 		{ _id: choice._id },
