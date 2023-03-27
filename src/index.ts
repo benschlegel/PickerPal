@@ -10,6 +10,7 @@ import { startChoice } from './buttonEvents/startChoice';
 import { server } from './monitoring/startFastify';
 import { uptimeGauge, userbaseGauge } from './monitoring/prometheus';
 import { addChoiceModal } from './modalEvents/addChoice';
+import { handleDM } from './messageEvents/directMessage';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -83,6 +84,10 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 
+client.on('messageCreate', async message => {
+	if (message.author.bot) return;
+	await handleDM(message);
+});
 
 // Log in to Discord with your client's token
 client.login(process.env['TOKEN']);
