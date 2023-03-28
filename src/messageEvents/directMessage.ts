@@ -1,13 +1,17 @@
 import { Message } from 'discord.js';
-import { makeYesNoChoice } from 'src/utils/makeYesNoChoice';
+import { updateUserbase } from '../functions';
+import { promNumRequests } from '../monitoring/prometheus';
+import { makeYesNoChoice } from '../utils/makeYesNoChoice';
 
 export async function handleDM(message: Message) {
-	// TODO: add prom
+	// Prometheus
+	promNumRequests.inc({ makeYesNoDMChoice: 1 });
+	const commandUserId = message.author.id;
+	updateUserbase(commandUserId);
+
 	// Get promt from message and create embed
 	const promtName = message.content;
 	const yesNoEmbed = makeYesNoChoice(promtName);
-
-	console.log(yesNoEmbed);
 
 	// Reply with embed, disallow mentions so reply is not highlighted
 	message.reply({ embeds: [yesNoEmbed], allowedMentions: { users: [] } });

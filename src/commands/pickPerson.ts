@@ -34,7 +34,7 @@ const command : SlashCommand = {
 		),
 	async execute(interaction) {
 		// Prometheus
-		promNumRequests.inc({ ping: 1 });
+		promNumRequests.inc({ pickPerson: 1 });
 		const commandUserId = interaction.user.id;
 		updateUserbase(commandUserId);
 		console.log('level=trace command="/pick-person" userId=' + commandUserId + ' username="' + interaction.user.username + '"');
