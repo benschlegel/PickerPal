@@ -8,7 +8,7 @@ collectDefaultMetrics({ prefix });
 export const promNumRequests = new client.Counter({
 	name: prefix + 'num_requests',
 	help: 'Number of commands executed on this bot',
-	labelNames: ['makeChoice', 'ping', 'makeYesNoDMChoice', 'pickPerson'] as const,
+	labelNames: ['makeChoice', 'ping', 'makeYesNoDMChoice', 'pickPerson', 'pickGroup'] as const,
 });
 
 export const heartbeatGauge = new client.Gauge({
