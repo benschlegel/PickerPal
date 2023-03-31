@@ -14,7 +14,7 @@ const command : SlashCommand = {
 	command: new SlashCommandBuilder()
 		.setName('pick-group')
 		.setDescription('Picks members for a group from a role (set "title" for title of choice/group)')
-		.addMentionableOption(option =>
+		.addRoleOption(option =>
 			option
 				.setRequired(true)
 				.setDescription('Which role to pick group from')
@@ -40,13 +40,19 @@ const command : SlashCommand = {
 		updateUserbase(commandUserId);
 		console.log('level=trace command="/pick-group" userId=' + commandUserId + ' username="' + interaction.user.username + '"');
 
+		// Fetch members to be able to get role.members accurately
+		await interaction.guild?.members.fetch();
+
 		// Get options
-		const role = interaction.options.getMentionable(roleOption, true) as Role;
+		const role = interaction.options.getRole(roleOption, true) as Role;
 		const pickOriginal = interaction.options.getInteger(sizeOption);
+		console.log('size: ' + pickOriginal);
+		console.log('role size: ' + role.members.size);
 		const title = interaction.options.getString(titleOption);
 
 		// Get member ids from VoiceChannel
 		const members = role.members.map(m => m.id);
+		console.log('members: ' + members);
 
 		// Send error if no members in voice channel
 		if (members.length === 0) {
@@ -56,6 +62,8 @@ const command : SlashCommand = {
 
 		// Set pick amount (defaults to 1, if 'picks' is set via options, set to min between 'picks' option and number of people in voice channel [so no invalid state can be reached if picks is higher than members.length])
 		const pickAmount = pickOriginal ? Math.min(pickOriginal, members.length) : min_size;
+
+		console.log('pick amount: ' + pickAmount);
 
 		// Randomly pick
 		const resultPicks = randomEntriesFromArray(pickAmount, members);
@@ -92,7 +100,7 @@ const command : SlashCommand = {
 				embed,
 			],
 		}).catch(err => {
-			console.log('level=error command="/pick-person" error="' + stringify(err) + '"');
+			console.log('level=error command="/pick-group" error="' + stringify(err) + '"');
 		});
 	},
 };

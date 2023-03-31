@@ -23,7 +23,7 @@ setInterval(deleteOldPolls, deleteInterval);
 setInterval(checkAliveAndRestart, checkAliveInterval);
 
 // Create a new client instance
-export const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildVoiceStates], partials: [Partials.Channel] });
+export const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMembers], partials: [Partials.Channel] });
 
 console.log('level=trace msg="Fastify server is up." server="' + stringify(server) + '"');
 
