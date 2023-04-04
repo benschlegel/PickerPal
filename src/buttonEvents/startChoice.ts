@@ -61,7 +61,7 @@ export async function startChoice(interaction: ButtonInteraction<CacheType>) {
 
 	// Add fields for decision
 	newFields.push({ name: '\u200B', value: '\u200B' });
-	newFields.push({ name: '⚡ Final Decision', value: getEmojiFromIndexWithChoice(winningChoiceIndex, finalChoice) + ' ' + finalChoice });
+	newFields.push({ name: '⚡ Decision', value: getEmojiFromIndexWithChoice(winningChoiceIndex, finalChoice) + ' ' + finalChoice });
 
 	// Update database entries
 	fullChoice.currentChoice = finalChoice;

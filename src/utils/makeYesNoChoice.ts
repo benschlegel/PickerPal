@@ -29,7 +29,7 @@ export function makeYesNoChoice(title: string): EmbedBuilder {
 	newFields.push({ name: '\u200B', value: '\u200B' });
 
 	// Add decision (getEmoji(0), since it can only contain yes/no, which automatically gets transformed to correct emoji no matter the index)
-	newFields.push({ name: '⚡ Final Decision', value: getEmojiFromIndexWithChoice(0, result) + ' ' + result });
+	newFields.push({ name: '⚡ Decision', value: getEmojiFromIndexWithChoice(0, result) + ' ' + result });
 
 	choiceEmbed.addFields(newFields);
 	return choiceEmbed;

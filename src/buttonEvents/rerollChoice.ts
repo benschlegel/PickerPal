@@ -7,7 +7,7 @@ export async function rerollChoice(interaction: ButtonInteraction<CacheType>) {
 	// Database access
 	const messageId = interaction.message?.id;
 	const commandUserId = interaction.user.id;
-	console.log('level=trace msg="Choice has been rerolled." id="' + messageId + '"');
+	console.log('level=trace msg="Choice has been rerolled." messageId="' + messageId + '"');
 
 	const isOwner = await isUserChoiceOwner(messageId, commandUserId);
 	if (!isOwner) {
@@ -16,7 +16,10 @@ export async function rerollChoice(interaction: ButtonInteraction<CacheType>) {
 	}
 	const choices = await getChoices(messageId) as string[];
 	const fullChoice = await getFullChoice(messageId);
-	if (!fullChoice) return;
+	if (!fullChoice) {
+		console.log('level="error" msg="choice not found!" button="reroll-choice" id="' + messageId + '"');
+		return;
+	}
 	const choiceTitle = fullChoice?.choiceTitle as string;
 
 	// Fill in static fields
@@ -37,14 +40,17 @@ export async function rerollChoice(interaction: ButtonInteraction<CacheType>) {
 
 	// Add fields for decision
 	newFields.push({ name: '\u200B', value: '\u200B' });
-	newFields.push({ name: '⚡ Final Decision', value: getEmojiFromIndexWithChoice(winningChoiceIndex, finalChoice) + ' ' + finalChoice });
+	newFields.push({ name: '⚡ Decision', value: getEmojiFromIndexWithChoice(winningChoiceIndex, finalChoice) + ' ' + finalChoice });
 
 	// Update database entries
 	fullChoice.currentChoice = finalChoice;
 	await setChoice(messageId, fullChoice);
 
 	// Increment rerolls and update description
-	if (!fullChoice.rerollAmount) return;
+	if (fullChoice.rerollAmount === undefined || fullChoice.rerollAmount === null) {
+		console.log('level="error" msg="rerollAmount not found!" button="reroll-choice" id="' + messageId + '"');
+		return;
+	}
 	incrementRerollAmount(messageId);
 	const rerolls = fullChoice?.rerollAmount + 1;
 	const newDescription = ':warning: *This choice has been rerolled **(' + rerolls + ') times**.*';
