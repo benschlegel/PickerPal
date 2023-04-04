@@ -1,6 +1,6 @@
-import { ActionRowBuilder, ButtonInteraction, CacheType, ModalActionRowComponentBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
-import { ModalCustomID } from '../types';
+import { ButtonInteraction, CacheType } from 'discord.js';
 import { getFullChoice, isUserChoiceOwner } from '../utils/databaseAcces';
+import { modal } from '../components/modals';
 
 export async function addTextChoice(interaction: ButtonInteraction<CacheType>) {
 	// Database vars
@@ -20,22 +20,6 @@ export async function addTextChoice(interaction: ButtonInteraction<CacheType>) {
 		interaction.reply({ content: ':x: You did not create this choice.', ephemeral: true });
 		return;
 	}
-
-	const modal = new ModalBuilder()
-		.setCustomId('text-option-modal' as ModalCustomID)
-		.setTitle('Add new choice(s)...')
-		.addComponents([
-			new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-				new TextInputBuilder()
-					.setCustomId('verification-input')
-					.setLabel('Add choices (use new line for multiple):')
-					.setStyle(TextInputStyle.Paragraph)
-					.setPlaceholder('New choice(s)...')
-					.setMaxLength(300)
-					.setValue('')
-					.setRequired(true),
-			),
-		]);
 
 	await interaction.showModal(modal);
 }
