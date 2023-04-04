@@ -5,6 +5,7 @@ export interface CreateChoice {
   choiceTitle: string;
   isComplete?: boolean;
   finalChoice?: string;
+  rerollAmount?: number;
   choices?: string[];
 }
 

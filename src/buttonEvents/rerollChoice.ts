@@ -1,7 +1,7 @@
 import { APIEmbedField, ButtonInteraction, CacheType, EmbedBuilder } from 'discord.js';
 import { rerollRow } from '../components/buttons';
 import { getEmojiFromIndexWithChoice, randomIntFromInterval } from '../functions';
-import { getChoices, getFullChoice, isUserChoiceOwner } from '../utils/databaseAcces';
+import { getChoices, getFullChoice, incrementRerollAmount, isUserChoiceOwner } from '../utils/databaseAcces';
 
 export async function rerollChoice(interaction: ButtonInteraction<CacheType>) {
 	// Database access
@@ -37,12 +37,19 @@ export async function rerollChoice(interaction: ButtonInteraction<CacheType>) {
 	newFields.push({ name: '\u200B', value: '\u200B' });
 	newFields.push({ name: '⚡ Final Decision', value: getEmojiFromIndexWithChoice(winningChoiceIndex, finalChoice) + ' ' + finalChoice });
 
+	// Increment rerolls and update description
+	if (!fullChoice?.rerollAmount) return;
+	incrementRerollAmount(messageId);
+	const rerolls = fullChoice?.rerollAmount + 1;
+	const newDescription = ':warning: *This choice has been rerolled **(' + rerolls + ') times**.*';
+
+	// Update message
 	const receivedEmbed = interaction.message?.embeds[0];
 	const choiceEmbed = EmbedBuilder.from(receivedEmbed);
 	interaction.message?.edit({
 		embeds: [
 			choiceEmbed
-				.setDescription(':warning: *This choice has been **rerolled**.*')
+				.setDescription(newDescription)
 				.setFields([])
 				.addFields(
 					newFields,

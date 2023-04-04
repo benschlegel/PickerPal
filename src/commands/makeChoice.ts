@@ -75,7 +75,7 @@ const command : SlashCommand = {
 			}
 
 			// Create new choice
-			const choice: CreateChoice = { _id: msg.id, choiceTitle: title, ownerId: commandUserId };
+			const choice: CreateChoice = { _id: msg.id, choiceTitle: title, ownerId: commandUserId, rerollAmount: 0 };
 			await createChoice(choice);
 
 			// Check if yesNoOption is set and add, if it is

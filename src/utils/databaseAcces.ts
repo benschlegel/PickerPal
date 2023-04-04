@@ -79,6 +79,17 @@ export async function getFullChoice(id: string) {
 	return choice;
 }
 
+/**
+ * Increments the amount of rerolls for a given choice
+ * @param id id of the choice/message to be incremented
+ */
+export async function incrementRerollAmount(id: string) {
+	await choiceCollection.updateOne(
+		{ _id: id },
+		{ $inc: { rerollAmount: 1 } },
+	);
+}
+
 export async function dropChoices() {
 	await choiceCollection.drop();
 }
@@ -105,7 +116,6 @@ export async function addToUserbase(id: string) {
 		},
 	);
 }
-
 
 export async function getUserbaseSize() {
 	const aggregate = metricCollection.aggregate([
