@@ -63,8 +63,8 @@ export async function startChoice(interaction: ButtonInteraction<CacheType>) {
 	newFields.push({ name: '\u200B', value: '\u200B' });
 	newFields.push({ name: '⚡ Final Decision', value: getEmojiFromIndexWithChoice(winningChoiceIndex, finalChoice) + ' ' + finalChoice });
 
-	// Set database entries
-	fullChoice.finalChoice = finalChoice;
+	// Update database entries
+	fullChoice.currentChoice = finalChoice;
 	await setChoice(messageId, fullChoice);
 
 	// Get old embed

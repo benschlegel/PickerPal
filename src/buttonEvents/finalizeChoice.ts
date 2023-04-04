@@ -21,6 +21,7 @@ export async function finalizeChoice(interaction: ButtonInteraction<CacheType>) 
 
 	// Set completed and update message
 	fullChoice.isComplete = true;
+	fullChoice.finalChoice = fullChoice.currentChoice;
 	await setChoice(messageId, fullChoice);
 	interaction.message?.edit({
 		components: [],

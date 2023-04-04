@@ -1,12 +1,13 @@
 import { APIEmbedField, ButtonInteraction, CacheType, EmbedBuilder } from 'discord.js';
 import { rerollRow } from '../components/buttons';
 import { getEmojiFromIndexWithChoice, randomIntFromInterval } from '../functions';
-import { getChoices, getFullChoice, incrementRerollAmount, isUserChoiceOwner } from '../utils/databaseAcces';
+import { getChoices, getFullChoice, incrementRerollAmount, isUserChoiceOwner, setChoice } from '../utils/databaseAcces';
 
 export async function rerollChoice(interaction: ButtonInteraction<CacheType>) {
 	// Database access
 	const messageId = interaction.message?.id;
 	const commandUserId = interaction.user.id;
+	console.log('level=trace msg="Choice has been rerolled." id="' + messageId + '"');
 
 	const isOwner = await isUserChoiceOwner(messageId, commandUserId);
 	if (!isOwner) {
@@ -15,6 +16,7 @@ export async function rerollChoice(interaction: ButtonInteraction<CacheType>) {
 	}
 	const choices = await getChoices(messageId) as string[];
 	const fullChoice = await getFullChoice(messageId);
+	if (!fullChoice) return;
 	const choiceTitle = fullChoice?.choiceTitle as string;
 
 	// Fill in static fields
@@ -37,8 +39,12 @@ export async function rerollChoice(interaction: ButtonInteraction<CacheType>) {
 	newFields.push({ name: '\u200B', value: '\u200B' });
 	newFields.push({ name: '⚡ Final Decision', value: getEmojiFromIndexWithChoice(winningChoiceIndex, finalChoice) + ' ' + finalChoice });
 
+	// Update database entries
+	fullChoice.currentChoice = finalChoice;
+	await setChoice(messageId, fullChoice);
+
 	// Increment rerolls and update description
-	if (!fullChoice?.rerollAmount) return;
+	if (!fullChoice.rerollAmount) return;
 	incrementRerollAmount(messageId);
 	const rerolls = fullChoice?.rerollAmount + 1;
 	const newDescription = ':warning: *This choice has been rerolled **(' + rerolls + ') times**.*';

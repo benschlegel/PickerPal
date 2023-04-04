@@ -4,6 +4,7 @@ export interface CreateChoice {
   ownerId: string;
   choiceTitle: string;
   isComplete?: boolean;
+  currentChoice?: string;
   finalChoice?: string;
   rerollAmount?: number;
   choices?: string[];
