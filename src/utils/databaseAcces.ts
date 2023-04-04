@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { Choice, CreateChoice, Userbase } from './DBTypes';
+import { Choice, CreateChoice, CreateFeedback, Userbase } from './DBTypes';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -8,12 +8,14 @@ const uri = process.env['MONGO_URI'];
 const dbName = 'PickerPal';
 const collectionName = 'choices';
 const collectionNameMetrics = 'metrics';
+const collectionNameFeedback = 'feedback';
 const userbaseID = 'userbase';
 // Use connect method to connect to the server
 const dbClient = new MongoClient(uri);
 
 const database = dbClient.db(dbName);
 const choiceCollection = database.collection<CreateChoice>(collectionName);
+const feedbackCollection = database.collection<CreateFeedback>(collectionName);
 const metricCollection = database.collection<Userbase>(collectionNameMetrics);
 
 
@@ -34,6 +36,10 @@ export async function addChoice(choice: Choice) {
 		{ _id: choice.updateId },
 		{ $push: { choices: choice.name } },
 	);
+}
+
+export async function createFeedback(feedback: CreateFeedback) {
+	await feedbackCollection.insertOne(feedback);
 }
 
 /**

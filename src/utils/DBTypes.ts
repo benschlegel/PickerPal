@@ -10,6 +10,11 @@ export interface CreateChoice {
   choices?: string[];
 }
 
+export interface CreateFeedback {
+  _id: string;
+  feedback: string;
+}
+
 export interface Choice {
   updateId: string;
   name: string;

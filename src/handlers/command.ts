@@ -5,6 +5,7 @@ import * as makeChoice from '../commands/makeChoice';
 import * as ping from '../commands/ping';
 import * as pickPerson from '../commands/pickPerson';
 import * as pickGroup from '../commands/pickGroup';
+import * as feedback from '../commands/feedback';
 import { stringify } from '../functions';
 const process = require('process');
 
@@ -12,7 +13,7 @@ export function commandHandler(client : Client) {
 	const slashCommands : SlashCommandBuilder[] = [];
 
 	// TODO: add new commands here (+ add import * ...)
-	const commands = [makeChoice, ping, pickPerson, pickGroup];
+	const commands = [makeChoice, ping, pickPerson, pickGroup, feedback];
 
 	for (const command of commands.map(c => c.default)) {
 		slashCommands.push(command.command);
