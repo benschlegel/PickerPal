@@ -13,6 +13,7 @@ import { addChoiceModal } from './modalEvents/addChoice';
 import { handleDM } from './messageEvents/directMessage';
 import { rerollChoice } from './buttonEvents/rerollChoice';
 import { finalizeChoice } from './buttonEvents/finalizeChoice';
+import { addFeedback } from './modalEvents/addFeedback';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -73,6 +74,9 @@ client.on('interactionCreate', async interaction => {
 	if (interaction.type === InteractionType.ModalSubmit) {
 		if (interaction.customId === 'text-option-modal' as ModalCustomID) {
 			await addChoiceModal(interaction);
+		}
+		else if (interaction.customId === 'feedback-modal' as ModalCustomID) {
+			await addFeedback(interaction);
 		}
 	}
 	if (!interaction.isCommand()) return;

@@ -15,7 +15,7 @@ const dbClient = new MongoClient(uri);
 
 const database = dbClient.db(dbName);
 const choiceCollection = database.collection<CreateChoice>(collectionName);
-const feedbackCollection = database.collection<CreateFeedback>(collectionName);
+const feedbackCollection = database.collection<CreateFeedback>(collectionNameFeedback);
 const metricCollection = database.collection<Userbase>(collectionNameMetrics);
 
 

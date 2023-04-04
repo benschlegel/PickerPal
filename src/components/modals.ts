@@ -24,10 +24,10 @@ export const feedbackModal = new ModalBuilder()
 		new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
 			new TextInputBuilder()
 				.setCustomId('feedback-input' as ModalOptionID)
-				.setLabel('Add choices (use new line for multiple):')
+				.setLabel('Add feedback:')
 				.setStyle(TextInputStyle.Paragraph)
-				.setPlaceholder('New choice(s)...')
-				.setMaxLength(300)
+				.setPlaceholder('Feedback (feature requests, bugs, etc)...')
+				.setMaxLength(500)
 				.setValue('')
 				.setRequired(true),
 		),

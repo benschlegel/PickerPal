@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { promNumRequests } from '../monitoring/prometheus';
 import { SlashCommand } from '../types';
+import { feedbackModal } from '../components/modals';
 
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
@@ -12,7 +13,8 @@ const command : SlashCommand = {
 		// Update prometheus command counter
 		promNumRequests.inc({ feedback: 1 });
 
-
+		// Show modal
+		await interaction.showModal(feedbackModal);
 	},
 };
 
