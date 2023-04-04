@@ -8,7 +8,7 @@ const roleOption = 'role';
 const sizeOption = 'size';
 const titleOption = 'title';
 
-const min_size = 2;
+const min_size = 1;
 
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
@@ -23,7 +23,7 @@ const command : SlashCommand = {
 		)
 		.addIntegerOption(option =>
 			option
-				.setMinValue(2)
+				.setMinValue(min_size)
 				.setRequired(false)
 				.setName(sizeOption)
 				.setDescription('How many people to choose for group (e.g. "2" will choose 2 people from selected role)'),
@@ -47,13 +47,10 @@ const command : SlashCommand = {
 		// Get options
 		const role = interaction.options.getRole(roleOption, true) as Role;
 		const pickOriginal = interaction.options.getInteger(sizeOption);
-		console.log('size: ' + pickOriginal);
-		console.log('role size: ' + role.members.size);
 		const title = interaction.options.getString(titleOption);
 
 		// Get member ids from VoiceChannel
 		const members = role.members.map(m => m.id);
-		console.log('members: ' + members);
 
 		// Send error if no members in voice channel
 		if (members.length === 0) {
@@ -63,8 +60,6 @@ const command : SlashCommand = {
 
 		// Set pick amount (defaults to 1, if 'picks' is set via options, set to min between 'picks' option and number of people in voice channel [so no invalid state can be reached if picks is higher than members.length])
 		const pickAmount = pickOriginal ? Math.min(pickOriginal, members.length) : min_size;
-
-		console.log('pick amount: ' + pickAmount);
 
 		// Randomly pick
 		const resultPicks = randomEntriesFromArray(pickAmount, members);
