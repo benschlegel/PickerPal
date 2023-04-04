@@ -22,7 +22,7 @@ export async function addTextChoice(interaction: ButtonInteraction<CacheType>) {
 
 	const modal = new ModalBuilder()
 		.setCustomId('text-option-modal' as ModalCustomID)
-		.setTitle('Add new choice...')
+		.setTitle('Add new choice(s)...')
 		.addComponents([
 			new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
 				new TextInputBuilder()
