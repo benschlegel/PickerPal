@@ -48,4 +48,6 @@ declare module 'discord.js' {
 
 export type ButtonCustomID = 'add-text-choice' | 'start-choice' | 'yes-no-choice' | 'reroll-choice' | 'finalize-choice';
 
-export type ModalCustomID = 'text-option-modal'
+export type ModalCustomID = 'text-option-modal' | 'feedback-modal';
+
+export type ModalOptionID = 'verification-input' | 'feedback-input';

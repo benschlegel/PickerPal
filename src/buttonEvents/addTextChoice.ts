@@ -1,6 +1,6 @@
 import { ButtonInteraction, CacheType } from 'discord.js';
 import { getFullChoice, isUserChoiceOwner } from '../utils/databaseAcces';
-import { modal } from '../components/modals';
+import { addChoicesModal } from '../components/modals';
 
 export async function addTextChoice(interaction: ButtonInteraction<CacheType>) {
 	// Database vars
@@ -21,5 +21,5 @@ export async function addTextChoice(interaction: ButtonInteraction<CacheType>) {
 		return;
 	}
 
-	await interaction.showModal(modal);
+	await interaction.showModal(addChoicesModal);
 }
