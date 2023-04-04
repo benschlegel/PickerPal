@@ -11,6 +11,8 @@ import { server } from './monitoring/startFastify';
 import { uptimeGauge, userbaseGauge } from './monitoring/prometheus';
 import { addChoiceModal } from './modalEvents/addChoice';
 import { handleDM } from './messageEvents/directMessage';
+import { rerollChoice } from './buttonEvents/rerollChoice';
+import { finalizeChoice } from './buttonEvents/finalizeChoice';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');
@@ -59,9 +61,13 @@ client.on('interactionCreate', async interaction => {
 		else if (interaction.customId === 'start-choice' as ButtonCustomID) {
 			await startChoice(interaction);
 		}
+		else if (interaction.customId === 'reroll-choice' as ButtonCustomID) {
+			await rerollChoice(interaction);
+		}
+		else if (interaction.customId === 'finalize-choice' as ButtonCustomID) {
+			await finalizeChoice(interaction);
+		}
 	}
-
-	// TODO: update modal text to indicate multiple choices
 
 	// Gets executed after modal submit
 	if (interaction.type === InteractionType.ModalSubmit) {

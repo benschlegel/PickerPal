@@ -29,3 +29,20 @@ export const choiceRow2 = new ActionRowBuilder<ButtonBuilder>()
 			.setLabel('✅ Make choice')
 			.setStyle(ButtonStyle.Success),
 	);
+
+
+const rerollChoiceID: ButtonCustomID = 'reroll-choice';
+const finalizeChoiceID: ButtonCustomID = 'finalize-choice';
+export const rerollRow = new ActionRowBuilder<ButtonBuilder>()
+	.addComponents(
+		new ButtonBuilder()
+			.setCustomId(rerollChoiceID)
+			.setLabel('🎲 Reroll choice')
+			.setStyle(ButtonStyle.Primary),
+	)
+	.addComponents(
+		new ButtonBuilder()
+			.setCustomId(finalizeChoiceID)
+			.setLabel('Finalize choice')
+			.setStyle(ButtonStyle.Secondary),
+	);

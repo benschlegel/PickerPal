@@ -2,6 +2,7 @@
 import { APIEmbedField, ButtonInteraction, CacheType, EmbedBuilder } from 'discord.js';
 import { getEmojiFromIndexWithChoice, randomIntFromInterval } from '../functions';
 import { getChoices, getFullChoice, isUserChoiceOwner, setChoice } from '../utils/databaseAcces';
+import { rerollRow } from '../components/buttons';
 
 // How many choices are required before you can start
 const minChoices = 2;
@@ -78,7 +79,7 @@ export async function startChoice(interaction: ButtonInteraction<CacheType>) {
   				newFields,
   			),
   	],
-  	components: [],
+  	components: [rerollRow],
 	});
 	interaction.deferUpdate();
 }

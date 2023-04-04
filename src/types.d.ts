@@ -46,6 +46,6 @@ declare module 'discord.js' {
     }
 }
 
-export type ButtonCustomID = 'add-text-choice' | 'start-choice' | 'yes-no-choice' ;
+export type ButtonCustomID = 'add-text-choice' | 'start-choice' | 'yes-no-choice' | 'reroll-choice' | 'finalize-choice';
 
 export type ModalCustomID = 'text-option-modal'
