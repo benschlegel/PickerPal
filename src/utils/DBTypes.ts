@@ -11,7 +11,7 @@ export interface CreateChoice {
 }
 
 export interface CreateFeedback {
-  _id: string;
+  id: string;
   feedback: string;
 }
 

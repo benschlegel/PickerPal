@@ -21,7 +21,7 @@ export async function addFeedback(interaction: ModalSubmitInteraction<CacheType>
 
 	// Add feedback object and add to DB
 	const feedback: CreateFeedback = {
-		_id: id,
+		id: id,
 		feedback: response,
 	};
 
