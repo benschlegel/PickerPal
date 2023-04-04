@@ -64,9 +64,9 @@ export async function startChoice(interaction: ButtonInteraction<CacheType>) {
 	newFields.push({ name: '⚡ Final Decision', value: getEmojiFromIndexWithChoice(winningChoiceIndex, finalChoice) + ' ' + finalChoice });
 
 	// Set database entries
-	fullChoice.isComplete = true;
 	fullChoice.finalChoice = finalChoice;
 	await setChoice(messageId, fullChoice);
+
 	// Get old embed
 	const receivedEmbed = interaction.message?.embeds[0];
 	const choiceEmbed = EmbedBuilder.from(receivedEmbed);
