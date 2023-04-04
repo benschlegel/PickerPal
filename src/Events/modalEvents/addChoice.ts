@@ -1,8 +1,8 @@
 import { CacheType, ModalSubmitInteraction } from 'discord.js';
-import { updateChoices } from '../functions';
-import { addChoices, getChoices, getFullChoice } from '../utils/databaseAcces';
-import { Choice } from '../utils/DBTypes';
-import { ModalOptionID } from '../types';
+import { updateChoices } from '../../functions';
+import { addChoices, getChoices, getFullChoice } from '../../utils/databaseAcces';
+import { Choice } from '../../utils/DBTypes';
+import { ModalOptionID } from '../../types';
 
 export async function addChoiceModal(interaction: ModalSubmitInteraction<CacheType>) {
 	// Response from modal input field

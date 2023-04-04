@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
-import { updateUserbase } from '../functions';
-import { promNumRequests } from '../monitoring/prometheus';
-import { makeYesNoChoice } from '../utils/makeYesNoChoice';
+import { updateUserbase } from '../../functions';
+import { promNumRequests } from '../../monitoring/prometheus';
+import { makeYesNoChoice } from '../../utils/makeYesNoChoice';
 
 export async function handleDM(message: Message) {
 	// Prometheus

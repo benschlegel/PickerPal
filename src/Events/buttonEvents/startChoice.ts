@@ -1,23 +1,44 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { APIEmbedField, ButtonInteraction, CacheType, EmbedBuilder } from 'discord.js';
-import { rerollRow } from '../components/buttons';
-import { getEmojiFromIndexWithChoice, randomIntFromInterval } from '../functions';
-import { getChoices, getFullChoice, incrementRerollAmount, isUserChoiceOwner, setChoice } from '../utils/databaseAcces';
+import { getEmojiFromIndexWithChoice, randomIntFromInterval } from '../../functions';
+import { getChoices, getFullChoice, isUserChoiceOwner, setChoice } from '../../utils/databaseAcces';
+import { rerollRow } from '../../components/buttons';
 
-export async function rerollChoice(interaction: ButtonInteraction<CacheType>) {
+// How many choices are required before you can start
+const minChoices = 2;
+
+export async function startChoice(interaction: ButtonInteraction<CacheType>) {
 	// Database access
 	const messageId = interaction.message?.id;
 	const commandUserId = interaction.user.id;
-	console.log('level=trace msg="Choice has been rerolled." messageId="' + messageId + '"');
 
 	const isOwner = await isUserChoiceOwner(messageId, commandUserId);
 	if (!isOwner) {
 		interaction.reply({ content: ':x: You did not create this choice.', ephemeral: true });
 		return;
 	}
+
 	const choices = await getChoices(messageId) as string[];
 	const fullChoice = await getFullChoice(messageId);
 	if (!fullChoice) {
-		console.log('level="error" msg="choice not found!" button="reroll-choice" id="' + messageId + '"');
+		await interaction.reply({ content: ':warning: Choice not found.', ephemeral: true });
+		return;
+	}
+	// Send error message if no choices have been added
+	if (choices.length === 0) {
+		await interaction.reply({ content: ':warning: Can\'t make choice without options, add choice to get started.\n:x: Did not complete action.', ephemeral: true });
+		return;
+	}
+
+	// Send error message if there's not enough options
+	if (choices.length < minChoices) {
+		await interaction.reply({ content: ':warning: Add at least ' + minChoices + ' options to make decision.\n:x: Did not complete action.', ephemeral: true });
+		return;
+	}
+
+	// Dont reroll choice if already complete
+	if (fullChoice?.isComplete === true) {
+		await interaction.reply({ content: ':warning: Choice has already been decided, start a new one if you want to reroll.\n:x: Did not complete action.', ephemeral: true });
 		return;
 	}
 	const choiceTitle = fullChoice?.choiceTitle as string;
@@ -46,28 +67,19 @@ export async function rerollChoice(interaction: ButtonInteraction<CacheType>) {
 	fullChoice.currentChoice = finalChoice;
 	await setChoice(messageId, fullChoice);
 
-	// Increment rerolls and update description
-	if (fullChoice.rerollAmount === undefined || fullChoice.rerollAmount === null) {
-		console.log('level="error" msg="rerollAmount not found!" button="reroll-choice" id="' + messageId + '"');
-		return;
-	}
-	incrementRerollAmount(messageId);
-	const rerolls = fullChoice?.rerollAmount + 1;
-	const newDescription = ':warning: *This choice has been rerolled **(' + rerolls + ') times**.*';
-
-	// Update message
+	// Get old embed
 	const receivedEmbed = interaction.message?.embeds[0];
 	const choiceEmbed = EmbedBuilder.from(receivedEmbed);
 	interaction.message?.edit({
-		embeds: [
-			choiceEmbed
-				.setDescription(newDescription)
-				.setFields([])
-				.addFields(
-					newFields,
-				),
-		],
-		components: [rerollRow],
+  	embeds: [
+  		choiceEmbed
+  			.setDescription(':warning: *This choice has been decided.*')
+  			.setFields([])
+  			.addFields(
+  				newFields,
+  			),
+  	],
+  	components: [rerollRow],
 	});
 	interaction.deferUpdate();
 }

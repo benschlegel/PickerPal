@@ -4,16 +4,16 @@ import { ButtonCustomID, ModalCustomID, SlashCommand } from './types';
 import { deleteOldPolls, getUserbaseSize } from './utils/databaseAcces';
 import { stringify } from './functions';
 import { commandHandler } from './handlers/command';
-import { addTextChoice } from './buttonEvents/addTextChoice';
-import { yesNoChoice } from './buttonEvents/yesNoChoice';
-import { startChoice } from './buttonEvents/startChoice';
+import { addTextChoice } from './Events/buttonEvents/addTextChoice';
+import { yesNoChoice } from './Events/buttonEvents/yesNoChoice';
+import { startChoice } from './Events/buttonEvents/startChoice';
 import { server } from './monitoring/startFastify';
 import { uptimeGauge, userbaseGauge } from './monitoring/prometheus';
-import { addChoiceModal } from './modalEvents/addChoice';
-import { handleDM } from './messageEvents/directMessage';
-import { rerollChoice } from './buttonEvents/rerollChoice';
-import { finalizeChoice } from './buttonEvents/finalizeChoice';
-import { addFeedback } from './modalEvents/addFeedback';
+import { addChoiceModal } from './Events/modalEvents/addChoice';
+import { handleDM } from './Events/messageEvents/directMessage';
+import { rerollChoice } from './Events/buttonEvents/rerollChoice';
+import { finalizeChoice } from './Events/buttonEvents/finalizeChoice';
+import { addFeedback } from './Events/modalEvents/addFeedback';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const process = require('process');

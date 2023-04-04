@@ -1,7 +1,7 @@
 import { CacheType, ModalSubmitInteraction } from 'discord.js';
-import { createFeedback } from '../utils/databaseAcces';
-import { CreateFeedback } from '../utils/DBTypes';
-import { ModalOptionID } from '../types';
+import { createFeedback } from '../../utils/databaseAcces';
+import { CreateFeedback } from '../../utils/DBTypes';
+import { ModalOptionID } from '../../types';
 
 export async function addFeedback(interaction: ModalSubmitInteraction<CacheType>) {
 	// Response from modal input field

@@ -1,5 +1,5 @@
 import { ButtonInteraction, CacheType } from 'discord.js';
-import { getFullChoice, isUserChoiceOwner, setChoice } from '../utils/databaseAcces';
+import { getFullChoice, isUserChoiceOwner, setChoice } from '../../utils/databaseAcces';
 
 export async function finalizeChoice(interaction: ButtonInteraction<CacheType>) {
 	// Database access
