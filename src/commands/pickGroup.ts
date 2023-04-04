@@ -13,6 +13,7 @@ const min_size = 2;
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
 		.setName('pick-group')
+		.setDMPermission(false)
 		.setDescription('Picks members for a group from a role (set "title" for title of choice/group)')
 		.addRoleOption(option =>
 			option

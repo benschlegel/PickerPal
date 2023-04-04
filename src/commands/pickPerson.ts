@@ -10,8 +10,9 @@ const titleOption = 'title';
 
 const command : SlashCommand = {
 	command: new SlashCommandBuilder()
-		.setName('pick-person')
-		.setDescription('Picks a random person from a voice channel (set "picks" for multiple, set "title" for title)')
+		.setName('pick-people')
+		.setDMPermission(false)
+		.setDescription('Picks a random person from a voice channel (set "picks" argument to pick multiple people)')
 		.addChannelOption(option =>
 			option
 				.setRequired(true)
