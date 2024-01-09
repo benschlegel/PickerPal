@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, InteractionReplyOptions } from 'discord.js';
-import { stringify, updateUserbase } from '../functions';
+import { stringify, updatePlausible, updateUserbase } from '../functions';
 import { CreateChoice } from '../utils/DBTypes';
 import { choiceRow1, choiceRow2 } from '../components/buttons';
 import { OriginalPollEmbed } from '../components/embeds';
@@ -38,6 +38,9 @@ const command : SlashCommand = {
 		const useYesNoOption = interaction.options.getBoolean(optionYesNo);
 		const commandUserId = interaction.user.id;
 		updateUserbase(commandUserId);
+
+		// Update plausible analytics
+		updatePlausible('/make-choice', commandUserId);
 
 		console.log('level=trace command="/makeChoice" userId=' + commandUserId + ' username="' + interaction.user.username + '"');
 

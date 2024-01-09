@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder, ChannelType } from 'discord.js';
 import { SlashCommand } from '../types';
-import { randomEntriesFromArray, stringify, updateUserbase } from '../functions';
+import { randomEntriesFromArray, stringify, updatePlausible, updateUserbase } from '../functions';
 import { promNumRequests } from '../monitoring/prometheus';
 import { OriginalPollEmbed } from '../components/embeds';
 
@@ -38,6 +38,7 @@ const command : SlashCommand = {
 		promNumRequests.inc({ pickPerson: 1 });
 		const commandUserId = interaction.user.id;
 		updateUserbase(commandUserId);
+		updatePlausible('/pick-person', commandUserId);
 		console.log('level=trace command="/pick-person" userId=' + commandUserId + ' username="' + interaction.user.username + '"');
 
 		// Get options

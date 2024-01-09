@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder, ChannelType, AllowedMentionsTypes, Role } from 'discord.js';
 import { SlashCommand } from '../types';
-import { randomEntriesFromArray, stringify, updateUserbase } from '../functions';
+import { randomEntriesFromArray, stringify, updatePlausible, updateUserbase } from '../functions';
 import { promNumRequests } from '../monitoring/prometheus';
 import { OriginalPollEmbed } from '../components/embeds';
 
@@ -39,6 +39,7 @@ const command : SlashCommand = {
 		promNumRequests.inc({ pickGroup: 1 });
 		const commandUserId = interaction.user.id;
 		updateUserbase(commandUserId);
+		updatePlausible('/pick-group', commandUserId);
 		console.log('level=trace command="/pick-group" userId=' + commandUserId + ' username="' + interaction.user.username + '"');
 
 		// Fetch members to be able to get role.members accurately

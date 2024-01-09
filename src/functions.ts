@@ -156,3 +156,27 @@ export function updateChoices(choices: string[], interaction: ButtonInteraction<
 	});
 	interaction.deferUpdate();
 }
+
+/**
+ * Tries to register which command was used on plausible
+ * @param command which command was used
+ * @param id id of user who used command (used for deduping requests)
+ */
+export function updatePlausible(command: string, id: string) {
+	if (process.env['PLAUSIBLE_KEY'] && process.env['PLAUSIBLE_URL']) {
+		fetch(process.env['PLAUSIBLE_URL'], {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'User-Agent': `Mozilla/5.0 (Windows NT 10.0; Win64; x64; CustomID=${id}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3`,
+				'Authorization': `Bearer ${process.env['PLAUSIBLE_KEY']}`,
+			},
+			body: JSON.stringify({
+				name: 'pageview',
+				domain: 'picker.pal',
+				url: command,
+				'props': { 'version': '1.0.0' },
+			}),
+		});
+	}
+}
